@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/ontologylabs/mendix-runtime-crates/discussions
+    about: Questions, ideas, and "which version next?" — start here.
+  - name: 🚀 mxto.ai
+    url: https://mxto.ai
+    about: The AI delivery engine for Mendix — the platform behind these recipes.
