@@ -6,6 +6,16 @@
 
 [![no-mendix-binaries](https://github.com/ontologylabs/mendix-runtime-crates/actions/workflows/no-mendix-binaries.yml/badge.svg)](https://github.com/ontologylabs/mendix-runtime-crates/actions/workflows/no-mendix-binaries.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+![Mendix 7–11](https://img.shields.io/badge/Mendix-7%20%E2%80%93%2011-blue)
+
+**TL;DR** — `git clone` → `cd crates/mendix-11` → `docker build` (the Mendix runtime
+is pulled from the Mendix CDN, not committed) → `docker run` with your unzipped MDA
+bind-mounted. One image per Mendix version, reused across every app at that version,
+zero dangling layers. **[Jump to Quick start ↓](#quick-start)**
+
+> If you searched for *run a Mendix app in Docker*, *dockerize a Mendix app*, *Mendix
+> runtime Docker image*, *Mendix without Studio Pro*, *self-hosted Mendix container*,
+> or *Mendix 10 LTS Docker image* — this is that.
 
 ## What this is
 
@@ -81,22 +91,6 @@ The image tag (`ontologylabs/mendix-runtime:…`) is a **local** tag you choose 
 build time — these recipes publish no registry image, so name it whatever suits
 your pipeline. See each crate's `README.md` for the full env-var contract,
 bind-mount layout, and a `docker compose` smoke example.
-
-## Guides
-
-Version-specific, step-by-step walkthroughs:
-
-- **[Running Mendix 7 in Docker](docs/running-mendix-7-in-docker.md)** — legacy
-  7.23 (Java 8): the model-default-constants gotcha and the m2ee boot path.
-- **[Running Mendix 9 in Docker](docs/running-mendix-9-in-docker.md)** — 9.24
-  (Java 11): why JDK 21 fails, and native-mobile apps.
-- **[Running Mendix 10 in Docker](docs/running-mendix-10-in-docker.md)** — 10.24
-  LTS (Java 21): development mode and large-app first-boot DDL.
-- **[Running Mendix 11 in Docker](docs/running-mendix-11-in-docker.md)** — latest
-  11.x (Java 21): strict startup and `DEVELOPMENT_MODE`.
-
-A Mendix 8 guide will follow once an MX8 crate ships (pending a CDN-available
-runtime version).
 
 ## How distribution works (and the Mendix IP line)
 

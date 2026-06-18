@@ -1,0 +1,48 @@
+name: "📦 Request a Mendix version"
+description: "Ask for a Mendix runtime version to be added to a crate."
+title: "[version] Mendix <x.y.z>"
+labels: ["version-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping keep the library fresh — freshness is the whole point.
+        Tell us which Mendix runtime version you need and we'll add a verified crate row.
+  - type: input
+    id: version
+    attributes:
+      label: Mendix version
+      description: "Full version (Studio Pro → App → Settings → Runtime, or the MDA's metadata.json)."
+      placeholder: "10.18.5.71234"
+    validations:
+      required: true
+  - type: dropdown
+    id: major
+    attributes:
+      label: Major line
+      options:
+        - mendix-7
+        - mendix-8
+        - mendix-9
+        - mendix-10
+        - mendix-11
+        - other / not sure
+    validations:
+      required: true
+  - type: input
+    id: cdn
+    attributes:
+      label: CDN URL (if known)
+      description: "The build-time source. Usually https://cdn.mendix.com/runtime/mendix-<version>.tar.gz"
+      placeholder: "https://cdn.mendix.com/runtime/mendix-10.18.5.71234.tar.gz"
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else?
+      description: "App size, JRE, why you need this version — helps us prioritise."
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contribution
+      options:
+        - label: "I'm willing to build + smoke-test it and open a PR."

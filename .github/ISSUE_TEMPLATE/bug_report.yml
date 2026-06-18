@@ -1,0 +1,36 @@
+name: "🐞 Bug report"
+description: "Something in a crate doesn't work as documented."
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: crate
+    attributes:
+      label: Which crate?
+      options:
+        - mendix-7
+        - mendix-9
+        - mendix-10
+        - mendix-11
+        - other
+    validations:
+      required: true
+  - type: input
+    id: mxversion
+    attributes:
+      label: Mendix version
+      placeholder: "11.6.4"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: "Expected vs actual. Include the exact build/run command and the relevant log lines."
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: "Host OS + arch, Docker version, database, how you mounted the MDA."
+      placeholder: "macOS 15 / arm64, Docker 27.x, Postgres 16, MDA bind-mounted :ro"
