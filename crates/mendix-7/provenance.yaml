@@ -1,0 +1,32 @@
+# Per-image provenance for the mendix-7 runtime crate.
+# Records the exact build inputs + output digest of each verified image.
+# Recipe-pull distribution model (D-DOCKER-LIB-001): no registry, no published
+# Mendix binaries — the runtime tarball is curled from the Mendix CDN at build.
+#
+# Stable provenance anchor: cdn_source_url (anyone can re-fetch + verify the
+# same tarball). image_digest is the local image-config ID for THIS build; it
+# is build-environment-specific (apt package versions drift over time) and is
+# recorded for traceability, not byte-for-byte reproducibility.
+
+crate: mendix-7
+crate_version: "0.1.0"
+
+images:
+  - mendix_version: "7.23.8.58888"
+    cdn_source_url: "https://cdn.mendix.com/runtime/mendix-7.23.8.58888.tar.gz"
+    base_image: "eclipse-temurin:8-jre-jammy"
+    java_version: 8
+    platform: "linux/amd64"
+    image_tags:
+      - "ontologylabs/mendix-runtime:7.23.8.58888"
+      - "ontologylabs/mendix-runtime:7.23"
+      - "ontologylabs/mendix-runtime:7"
+    image_digest: "sha256:a5b4a6cb8bb1c10bbe72602211e868c92e98aa80b58f7dfe939ea84d706397d5"
+    image_size_bytes: 582400829
+    built_at: "2026-06-18"
+    smoke_verified_with:
+      app: moneyworksportal
+      mda_runtime_version: "7.23.8.58888"
+      result: "HTTP 200 — runtime healthy"
+      constants: "model-default constants auto-supplied from metadata.json"
+    notes: "Oldest supported major (2017-era). runtimelauncher.jar + m2ee admin-protocol boot path confirmed identical to MX9/10/11 (the build-time assertion passed)."

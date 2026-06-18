@@ -1,0 +1,48 @@
+# Smoke-test compose file for the Mendix 9 runtime crate.
+#
+# Usage:
+#   1. Build the crate image:
+#        docker build --platform linux/amd64 -t ontologylabs/mendix-runtime:9.24.20.33307 ..
+#   2. Place an unzipped MDA at ./mda/ (must contain model/metadata.json):
+#        unzip /path/to/your.mda -d ./mda/
+#   3. Bring up:
+#        docker compose -f docker-compose.smoke.yml up
+#   4. Verify:
+#        curl -fsS http://localhost:8080/
+#   5. Tear down:
+#        docker compose -f docker-compose.smoke.yml down -v
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_USER: mendix
+      POSTGRES_PASSWORD: mendix
+      POSTGRES_DB: mendix
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mendix"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  mendix-runtime:
+    image: ontologylabs/mendix-runtime:9.24.20.33307
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ADMIN_PASSWORD: "SmokeTest2026!"
+      DATABASE_ENDPOINT: "postgres://mendix:mendix@postgres:5432/mendix"
+      DEVELOPMENT_MODE: "true"
+    ports:
+      - "8080:8080"
+      - "8090:8090"
+    volumes:
+      # Bind-mount the unzipped MDA. Operator must place files here before
+      # `up`. Read-only is good practice but the runtime sometimes wants to
+      # write tmp files into BasePath/data — using rw to be safe.
+      - ./mda:/opt/mendix/app
+      - mendix-data:/opt/mendix/data
+
+volumes:
+  mendix-data:

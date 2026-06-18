@@ -1,0 +1,18 @@
+# Mendix v9 versions verified against this crate.
+# When adding a new version, build + smoke-test it, then add the row.
+
+crate_version: "0.1.0"
+default_mendix_version: "9.24.20.33307"
+
+supported:
+  - mendix_version: "9.24.20.33307"
+    cdn_url: "https://cdn.mendix.com/runtime/mendix-9.24.20.33307.tar.gz"
+    java_version: 11
+    verified_with:
+      - figwarehouse  # 9.24.20 upgrade fixture
+      - aquacheck     # 9.24.20 upgrade fixture
+    verified_at: "2026-06-18"
+    notes: "Initial verification fixture. JDK 11 base — JDK 21 is incompatible with the MX9 bundled gradle."
+
+planned:
+  - mendix_version: "9.24.36.73625"  # Edubond V2 fixture

@@ -1,0 +1,32 @@
+# Per-image provenance for the mendix-9 runtime crate.
+# Records the exact build inputs + output digest of each verified image.
+# Recipe-pull distribution model (D-DOCKER-LIB-001): no registry, no published
+# Mendix binaries — the runtime tarball is curled from the Mendix CDN at build.
+#
+# Stable provenance anchor: cdn_source_url (anyone can re-fetch + verify the
+# same tarball). image_digest is the local image-config ID for THIS build; it
+# is build-environment-specific (apt package versions drift over time) and is
+# recorded for traceability, not byte-for-byte reproducibility.
+
+crate: mendix-9
+crate_version: "0.1.0"
+
+images:
+  - mendix_version: "9.24.20.33307"
+    cdn_source_url: "https://cdn.mendix.com/runtime/mendix-9.24.20.33307.tar.gz"
+    base_image: "eclipse-temurin:11-jre-jammy"
+    java_version: 11
+    platform: "linux/amd64"
+    image_tags:
+      - "ontologylabs/mendix-runtime:9.24.20.33307"
+      - "ontologylabs/mendix-runtime:9.24"
+      - "ontologylabs/mendix-runtime:9"
+    image_digest: "sha256:c89844a0027d686c58c4186b1106575deab42ff5394bccc6b3960da597b1e5e1"
+    image_size_bytes: 846545450
+    built_at: "2026-06-18"
+    smoke_verified_with:
+      app: figwarehouse
+      mda_runtime_version: "9.24.20.33307"
+      result: "HTTP 200 — runtime healthy"
+      constants: "10 model-default constants auto-supplied from metadata.json (incl. nested-JSON GPubSub.EnabledSubscriptions)"
+    notes: "MX9 runtime does not auto-apply model-default constants; start.sh builds MicroflowConstants from metadata.json."

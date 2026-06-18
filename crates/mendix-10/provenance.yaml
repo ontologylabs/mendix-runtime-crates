@@ -1,0 +1,33 @@
+# Per-image provenance for the mendix-10 runtime crate.
+# Records the exact build inputs + output digest of each verified image.
+# Recipe-pull distribution model (D-DOCKER-LIB-001): no registry, no published
+# Mendix binaries — the runtime tarball is curled from the Mendix CDN at build.
+#
+# Stable provenance anchor: cdn_source_url (anyone can re-fetch + verify the
+# same tarball). image_digest is the local image-config ID for THIS build; it
+# is build-environment-specific (apt package versions drift over time) and is
+# recorded for traceability, not byte-for-byte reproducibility.
+
+crate: mendix-10
+crate_version: "0.1.0"
+
+images:
+  - mendix_version: "10.24.13.86719"
+    cdn_source_url: "https://cdn.mendix.com/runtime/mendix-10.24.13.86719.tar.gz"
+    base_image: "eclipse-temurin:21-jre-jammy"
+    java_version: 21
+    platform: "linux/amd64"
+    image_tags:
+      - "ontologylabs/mendix-runtime:10.24.13.86719"
+      - "ontologylabs/mendix-runtime:10.24"
+      - "ontologylabs/mendix-runtime:10"
+    image_digest: "sha256:d5f96dcd3efdaceb780f05d33ff726a9ce3850aefbe922e0793b91e90588841c"
+    image_size_bytes: 1137596151
+    built_at: "2026-06-18"
+    smoke_verified_with:
+      app: adviser-marketplace
+      mda_runtime_version: "10.24.13.86719"
+      result: "HTTP 200 — runtime healthy"
+      constants: "91 model-default constants auto-supplied from metadata.json"
+      ddl: "9647 database synchronization commands completed (large production app)"
+    notes: "MX 10.24 LTS on Temurin 21. First boot of EFG's full schema under amd64 emulation is DDL-bound; smoke run with SMOKE_TIMEOUT=1200."

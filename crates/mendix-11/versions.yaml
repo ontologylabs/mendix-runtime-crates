@@ -1,0 +1,20 @@
+# Mendix v11 versions verified against this crate.
+# When adding a new version, build + smoke-test it, then add the row.
+
+crate_version: "0.1.0"
+default_mendix_version: "11.6.4"
+
+supported:
+  - mendix_version: "11.6.4"
+    cdn_url: "https://cdn.mendix.com/runtime/mendix-11.6.4.tar.gz"
+    java_version: 21
+    verified_with:
+      - claudius           # certification reference app
+      - expenseworks-main  # AgileWorks fresh-app fixture
+    verified_at: "2026-05-06"
+    notes: "Initial verification fixture."
+
+planned:
+  - mendix_version: "11.0.0"
+  - mendix_version: "11.3.0"
+  - mendix_version: "11.6.0"
