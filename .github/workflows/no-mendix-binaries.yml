@@ -1,0 +1,28 @@
+name: no-mendix-binaries
+
+# Hard guard (D-DOCKER-LIB-002): this public repo must never contain a Mendix
+# binary — only recipes + CDN URLs. Fails the build if guard.sh finds a forbidden
+# binary file pattern or any tracked file over the 256 KB cap.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run no-Mendix-binary guard
+        run: |
+          chmod +x ./guard.sh
+          ./guard.sh

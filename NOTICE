@@ -1,0 +1,14 @@
+Mendix Runtime Crates
+Copyright 2026 Ontology Labs, Inc.
+
+This product includes software developed at Ontology Labs, Inc.
+(https://ontologylabs.ai).
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+the files in this repository except in compliance with the License. You may
+obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 .
+
+The Mendix runtime — fetched from https://cdn.mendix.com at build time — is NOT
+part of this product. It is licensed separately by Mendix Technology B.V. under
+its own terms (https://www.mendix.com/terms-of-use/). No Mendix code is forked,
+modified, or redistributed by this repository.
