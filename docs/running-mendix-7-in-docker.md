@@ -101,4 +101,4 @@ The crate scaffolding (Dockerfile, `start.sh`, docs) is **Apache-2.0**. The Mend
 
 ---
 
-*Part of [mendix-runtime-crates](https://github.com/ontologylabs/mendix-runtime-crates) — the runtime layer of the **mxto** Mendix toolchain. Maintaining a Mendix 8, 9, or 10 app? The same pattern works for every version — see the the [README](../README.md) page.*
+*Part of [mendix-runtime-crates](https://github.com/ontologylabs/mendix-runtime-crates) — the runtime layer of the **mxto** Mendix toolchain. Maintaining a Mendix 8, 9, or 10 app? The same pattern works for every version — see the [README](../README.md).*
