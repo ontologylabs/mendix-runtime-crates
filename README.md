@@ -82,6 +82,16 @@ build time — these recipes publish no registry image, so name it whatever suit
 your pipeline. See each crate's `README.md` for the full env-var contract,
 bind-mount layout, and a `docker compose` smoke example.
 
+## Guides
+
+Version-specific, step-by-step walkthroughs:
+
+- **[Running Mendix 7 in Docker](docs/running-mendix-7-in-docker.md)** — boot a
+  legacy Mendix 7.23 app (Java 8) with no Studio Pro, covering the
+  model-default-constants gotcha and the m2ee boot path.
+
+Per-version guides for Mendix 8 / 9 / 10 / 11 are on the way.
+
 ## How distribution works (and the Mendix IP line)
 
 These recipes are distributed **recipe-only**:
