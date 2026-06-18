@@ -86,11 +86,17 @@ bind-mount layout, and a `docker compose` smoke example.
 
 Version-specific, step-by-step walkthroughs:
 
-- **[Running Mendix 7 in Docker](docs/running-mendix-7-in-docker.md)** — boot a
-  legacy Mendix 7.23 app (Java 8) with no Studio Pro, covering the
-  model-default-constants gotcha and the m2ee boot path.
+- **[Running Mendix 7 in Docker](docs/running-mendix-7-in-docker.md)** — legacy
+  7.23 (Java 8): the model-default-constants gotcha and the m2ee boot path.
+- **[Running Mendix 9 in Docker](docs/running-mendix-9-in-docker.md)** — 9.24
+  (Java 11): why JDK 21 fails, and native-mobile apps.
+- **[Running Mendix 10 in Docker](docs/running-mendix-10-in-docker.md)** — 10.24
+  LTS (Java 21): development mode and large-app first-boot DDL.
+- **[Running Mendix 11 in Docker](docs/running-mendix-11-in-docker.md)** — latest
+  11.x (Java 21): strict startup and `DEVELOPMENT_MODE`.
 
-Per-version guides for Mendix 8 / 9 / 10 / 11 are on the way.
+A Mendix 8 guide will follow once an MX8 crate ships (pending a CDN-available
+runtime version).
 
 ## How distribution works (and the Mendix IP line)
 
