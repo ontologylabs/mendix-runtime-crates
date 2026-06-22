@@ -62,6 +62,21 @@ smoke-tested against, plus planned versions. The boot path
 (`runtimelauncher.jar` + the m2ee admin protocol) is identical from Mendix 7
 through 11.
 
+## Container engine (no Docker Desktop needed)
+
+These recipes use only the plain `docker` CLI, so **any** Docker-API-compatible engine works — you do
+not need Docker Desktop. If `docker info` already succeeds, skip ahead to the [Quick start](#quick-start).
+Otherwise an OS-aware, idempotent bootstrap is included:
+
+```bash
+./scripts/devops/bootstrap-container-engine.sh
+```
+
+It sets up a headless, free engine — **macOS / Linux → [Colima](https://github.com/abiosoft/colima)**,
+**Windows → [Podman](https://podman.io)** — installs and starts it, removes Docker Desktop's `credsStore`
+(which otherwise breaks headless image pulls), and verifies `docker info`, `buildx`, and `compose`. See
+[`.claude/skills/container-build/`](.claude/skills/container-build/SKILL.md) for engine gotchas.
+
 ## Quick start
 
 ```bash
