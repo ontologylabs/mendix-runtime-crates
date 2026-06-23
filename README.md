@@ -1,8 +1,10 @@
 # Mendix Runtime Crates
 
-> Model-agnostic, app-agnostic, version-pinned Docker recipes for running **any**
-> Mendix application — Mendix 7 through 11 — without baking the model into the image.
-> Bind-mount your unzipped MDA, set a few env vars, get a working Mendix runtime.
+> Model-agnostic, app-agnostic, version-pinned Docker recipes for **running** and
+> **building** any Mendix application — Mendix 7 through 11 — without baking the
+> model into the image. Bind-mount your unzipped MDA, set a few env vars, get a
+> working Mendix runtime; or bind-mount a project and compile it to an `.mda`,
+> with no Studio Pro on the host.
 
 [![no-mendix-binaries](https://github.com/ontologylabs/mendix-runtime-crates/actions/workflows/no-mendix-binaries.yml/badge.svg)](https://github.com/ontologylabs/mendix-runtime-crates/actions/workflows/no-mendix-binaries.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
@@ -19,11 +21,14 @@ zero dangling layers. **[Jump to Quick start ↓](#quick-start)**
 
 ## What this is
 
-A set of **recipes** — `Dockerfile`, `start.sh`, and supporting scaffolding — that
-build a clean, reusable Docker image for each Mendix major version. They contain
-**no Mendix binaries**: the Mendix runtime tarball is downloaded from the official
-Mendix CDN (`cdn.mendix.com`) *at build time, on your machine*. You bring the
-licensed runtime; we bring the build recipe.
+A set of **recipes** — `Dockerfile`, `start.sh` / `build.sh`, and supporting
+scaffolding — that build a clean, reusable Docker image for each Mendix major
+version, in two flavours: a **runtime crate** (`crates/mendix-<N>/`) that runs an
+app, and a **build crate** (`crates/mendix-<N>/build/`) that compiles a project to
+an `.mda` and runs `mx check`. They contain **no Mendix binaries**: the Mendix
+runtime/toolchain tarball is downloaded from the official Mendix CDN
+(`cdn.mendix.com`) *at build time, on your machine*. You bring the licensed
+runtime; we bring the build recipe.
 
 ## The problem it solves
 
@@ -50,17 +55,44 @@ multiple bind-mounts.
 
 ## Supported versions
 
+### Runtime crates — *run* an app
+
 | Crate | Verified Mendix version | JRE | Base image | Status |
 |---|---|---|---|---|
 | [`crates/mendix-11`](crates/mendix-11) | `11.6.4` | Java 21 | `eclipse-temurin:21-jre-jammy` | verified |
 | [`crates/mendix-10`](crates/mendix-10) | `10.24.13.86719` (LTS) | Java 21 | `eclipse-temurin:21-jre-jammy` | verified |
 | [`crates/mendix-9`](crates/mendix-9) | `9.24.20.33307` | Java 11 | `eclipse-temurin:11-jre-jammy` | verified |
+| [`crates/mendix-8`](crates/mendix-8) | `8.18.35.97` (final LTS) | Java 11 | `eclipse-temurin:11-jre-jammy` | recipe (CDN 200) |
 | [`crates/mendix-7`](crates/mendix-7) | `7.23.8.58888` | Java 8 | `eclipse-temurin:8-jre-jammy` | verified |
 
-Each crate's `versions.yaml` lists the exact versions it has been built and
-smoke-tested against, plus planned versions. The boot path
-(`runtimelauncher.jar` + the m2ee admin protocol) is identical from Mendix 7
-through 11.
+### Build crates — *compile* an `.mpr` → `.mda`
+
+Each version also ships a **build crate** under `crates/mendix-<N>/build/`: a
+version-pinned `mxbuild` + `mx` toolchain image that compiles a project and runs
+`mx check`, with nothing on the host but Docker (no Studio Pro). The toolchain is
+pulled from the same CDN as `mxbuild-<version>.tar.gz`. See
+**[Building MDAs in Docker](docs/building-mendix-apps-in-docker.md)**.
+
+| Build crate | mxbuild version | JDK | Base image | Status |
+|---|---|---|---|---|
+| [`crates/mendix-11/build`](crates/mendix-11/build) | `11.6.4` | Java 21 | `eclipse-temurin:21-jdk-jammy` | image-verified¹ |
+| [`crates/mendix-10/build`](crates/mendix-10/build) | `10.24.13.86719` | Java 21 | `eclipse-temurin:21-jdk-jammy` | recipe (CDN 200) |
+| [`crates/mendix-9/build`](crates/mendix-9/build) | `9.24.20.33307` | Java 11 | `eclipse-temurin:11-jdk-jammy` | recipe (CDN 200) |
+| [`crates/mendix-8/build`](crates/mendix-8/build) | `8.18.35.97` | Java 11 | `eclipse-temurin:11-jdk-jammy` | recipe (CDN 200) |
+| [`crates/mendix-7/build`](crates/mendix-7/build) | `7.23.8.58888` | Java 8 | `eclipse-temurin:8-jdk-jammy` | recipe (CDN 200) |
+
+¹ *image-verified* = the image builds, the CDN toolchain pull succeeds, and the
+binaries + entrypoint resolve and run; a full `.mpr → .mda` compile against a
+licensed project is the remaining smoke gate (per crate `provenance.yaml`).
+*recipe (CDN 200)* = authored to the same proven pattern with the CDN source
+URL verified reachable, image build pending.
+
+Each crate's `versions.yaml` lists the exact versions it targets. The runtime
+boot path (`runtimelauncher.jar` + the m2ee admin protocol) and the build
+invocation are identical from Mendix 7 through 11. **Mendix 8** is out of
+standard support but its final LTS patch (`8.18.35.97`) is still CDN-hosted;
+older MX8 patches that aren't are covered by
+[`crates/mendix-8/PORTAL-DOWNLOAD.md`](crates/mendix-8/PORTAL-DOWNLOAD.md).
 
 ## Quick start
 
@@ -118,11 +150,16 @@ mendix-runtime-crates/
 ├── LICENSE                                  # Apache-2.0
 ├── guard.sh                                 # the no-Mendix-binary CI check
 ├── .github/workflows/no-mendix-binaries.yml # runs guard.sh on push + PR
+├── docs/
+│   ├── running-mendix-<N>-in-docker.md      # per-version run guides
+│   └── building-mendix-apps-in-docker.md    # compile an .mpr → .mda
 └── crates/
     ├── mendix-7/   { Dockerfile, start.sh, versions.yaml, provenance.yaml, README.md, CHANGELOG.md, tests/ }
-    ├── mendix-9/
-    ├── mendix-10/
-    └── mendix-11/
+    │   └── build/  { Dockerfile, build.sh, versions.yaml, provenance.yaml, README.md, CHANGELOG.md, tests/ }
+    ├── mendix-8/   { …runtime… , PORTAL-DOWNLOAD.md, build/ }   # final 8.18 LTS; portal fallback for older patches
+    ├── mendix-9/   { …runtime… , build/ }
+    ├── mendix-10/  { …runtime… , build/ }
+    └── mendix-11/  { …runtime… , build/ }
 ```
 
 ## Contributing a new version

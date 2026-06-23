@@ -1,0 +1,31 @@
+# Per-image provenance for the mendix-10 BUILD crate (mxbuild + mx).
+# Recipe-pull distribution model (D-DOCKER-LIB-001): no registry, no published
+# Mendix binaries — the toolchain tarball is curl'd from the Mendix CDN at build.
+#
+# Stable provenance anchor: cdn_source_url (anyone can re-fetch + verify the same
+# tarball). image_digest is the local image-config ID for a given build; it is
+# build-environment-specific (apt package versions drift) and recorded for
+# traceability, not byte-for-byte reproducibility. It is populated once the image
+# has been built + smoke-verified on a release machine.
+
+crate: mendix-10/build
+crate_version: "0.1.0"
+
+images:
+  - mendix_version: "10.24.13.86719"
+    cdn_source_url: "https://cdn.mendix.com/runtime/mxbuild-10.24.13.86719.tar.gz"
+    base_image: "eclipse-temurin:21-jdk-jammy"
+    java_version: 21
+    platform: "linux/amd64"
+    image_tags:
+      - "ontologylabs/mendix-mxbuild:10.24.13.86719"
+      - "ontologylabs/mendix-mxbuild:10"
+    image_digest: null        # filled after a verified release build
+    cdn_verified: "2026-06-23 — HTTP 200 (HEAD)"
+    smoke_verified: "pending"
+    notes: >
+      Recipe authored from the production AIDE aide-mxtools image (proven mxbuild
+      invocation: --java-home / --java-exe-path / --gradle-home / --loose-version-check)
+      and the verified runtime-crate recipe-pull pattern. The CDN source URL is
+      verified reachable; an image build + `mx version`/MDA smoke is the remaining
+      release gate.

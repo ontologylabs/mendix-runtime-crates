@@ -1,0 +1,19 @@
+# Mendix v11 build-toolchain versions verified against this crate.
+# When adding a new version: build the image, smoke-test (build a known .mpr +
+# mx check), then add the row. The build toolchain (mxbuild + mx) ships on the
+# same CDN as the runtime, as mxbuild-<version>.tar.gz.
+
+crate_version: "0.1.0"
+default_mendix_version: "11.6.4"
+
+supported:
+  - mendix_version: "11.6.4"
+    cdn_url: "https://cdn.mendix.com/runtime/mxbuild-11.6.4.tar.gz"
+    java_version: 21          # JDK (mxbuild compiles javasource at release 21)
+    cdn_status: "200 (verified 2026-06-23)"
+    image_build: "verified 2026-06-23 — builds clean, binaries resolve, entrypoint runs (650 MB, amd64)"
+    image_smoke: "pending — full .mpr → .mda compile needs a licensed MX11 project"
+    notes: "Pairs with the mendix-11 runtime crate (same default version). Reference crate for 7/8/9/10 build crates."
+
+planned:
+  - mendix_version: "11.0.0"

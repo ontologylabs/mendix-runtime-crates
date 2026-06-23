@@ -1,0 +1,38 @@
+# Per-image provenance for the mendix-11 BUILD crate (mxbuild + mx).
+# Recipe-pull distribution model (D-DOCKER-LIB-001): no registry, no published
+# Mendix binaries — the toolchain tarball is curl'd from the Mendix CDN at build.
+#
+# Stable provenance anchor: cdn_source_url (anyone can re-fetch + verify the same
+# tarball). image_digest is the local image-config ID for a given build; it is
+# build-environment-specific (apt package versions drift) and recorded for
+# traceability, not byte-for-byte reproducibility. It is populated once the image
+# has been built + smoke-verified on a release machine.
+
+crate: mendix-11/build
+crate_version: "0.1.0"
+
+images:
+  - mendix_version: "11.6.4"
+    cdn_source_url: "https://cdn.mendix.com/runtime/mxbuild-11.6.4.tar.gz"
+    base_image: "eclipse-temurin:21-jdk-jammy"
+    java_version: 21
+    platform: "linux/amd64"
+    image_tags:
+      - "ontologylabs/mendix-mxbuild:11.6.4"
+      - "ontologylabs/mendix-mxbuild:11"
+    image_digest: "sha256:04fa6043aa7058a82ecc1daef5bfebffc3bb6b9466c7e6136e2104b9413fff76"
+    image_size_bytes: 650279486
+    built_at: "2026-06-23"
+    platform_build: "linux/amd64 under Colima (Apple Silicon emulation)"
+    image_verified:
+      built: "exit 0 — recipe-pull curl of mxbuild-11.6.4.tar.gz from CDN succeeded"
+      layout: "modeler/mxbuild, modeler/mx, modeler/tools/gradle all resolve at /opt/mxtools/modeler"
+      entrypoint: "build.sh runs; `version` reports 11.6.4; unknown-command errors"
+      mx_executes: "mx binary runs under emulation (parses CLI verbs)"
+    smoke_verified: "pending — full .mpr → .mda compile needs a licensed MX11 project"
+    notes: >
+      Recipe authored from the production AIDE aide-mxtools image (proven mxbuild
+      invocation: --java-home / --java-exe-path / --gradle-home / --loose-version-check)
+      and the verified runtime-crate recipe-pull pattern. Image build + binary
+      resolution + entrypoint are verified (2026-06-23); the remaining release gate
+      is a real-project MDA compile.
