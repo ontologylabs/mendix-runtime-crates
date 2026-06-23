@@ -1,0 +1,30 @@
+# Per-image provenance for the mendix-8 runtime crate.
+# Recipe-pull distribution model (D-DOCKER-LIB-001): no registry, no published
+# Mendix binaries — the runtime tarball is curled from the Mendix CDN at build.
+#
+# Stable provenance anchor: cdn_source_url (anyone can re-fetch + verify the same
+# tarball). image_digest is the local image-config ID for a given build; it is
+# build-environment-specific (apt package versions drift) and is populated once
+# the image has been built + smoke-verified on a release machine.
+
+crate: mendix-8
+crate_version: "0.1.0"
+
+images:
+  - mendix_version: "8.18.35.97"
+    cdn_source_url: "https://cdn.mendix.com/runtime/mendix-8.18.35.97.tar.gz"
+    base_image: "eclipse-temurin:11-jre-jammy"
+    java_version: 11
+    platform: "linux/amd64"
+    image_tags:
+      - "ontologylabs/mendix-runtime:8.18.35.97"
+      - "ontologylabs/mendix-runtime:8.18"
+      - "ontologylabs/mendix-runtime:8"
+    image_digest: null            # filled after a verified release build
+    cdn_verified: "2026-06-23 — HTTP 200 (HEAD)"
+    smoke_verified: "pending"     # no MX8 fixture app in the corpus yet
+    notes: >
+      Final Mendix 8.18 LTS patch. Recipe mirrors the mendix-9 runtime crate
+      (same Java 11 base, same start.sh m2ee boot path). The CDN source URL is
+      verified reachable; an image build + MDA smoke against a real MX8 app is
+      the remaining release gate.

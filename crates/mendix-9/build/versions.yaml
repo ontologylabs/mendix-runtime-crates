@@ -1,0 +1,18 @@
+# Mendix v9 build-toolchain versions verified against this crate.
+# When adding a new version: build the image, smoke-test (build a known .mpr +
+# mx check), then add the row. The build toolchain (mxbuild + mx) ships on the
+# same CDN as the runtime, as mxbuild-<version>.tar.gz.
+
+crate_version: "0.1.0"
+default_mendix_version: "9.24.20.33307"
+
+supported:
+  - mendix_version: "9.24.20.33307"
+    cdn_url: "https://cdn.mendix.com/runtime/mxbuild-9.24.20.33307.tar.gz"
+    java_version: 11          # JDK (mxbuild compiles javasource at release 11)
+    cdn_status: "200 (verified 2026-06-23)"
+    image_smoke: "pending"    # image build + `mx version` not yet run in CI
+    notes: "Pairs with the mendix-9 runtime crate (same default version)."
+
+planned:
+  - mendix_version: "9.24.0"
