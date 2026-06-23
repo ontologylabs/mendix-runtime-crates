@@ -94,6 +94,21 @@ standard support but its final LTS patch (`8.18.35.97`) is still CDN-hosted;
 older MX8 patches that aren't are covered by
 [`crates/mendix-8/PORTAL-DOWNLOAD.md`](crates/mendix-8/PORTAL-DOWNLOAD.md).
 
+## Container engine (no Docker Desktop needed)
+
+These recipes use only the plain `docker` CLI, so **any** Docker-API-compatible engine works — you do
+not need Docker Desktop. If `docker info` already succeeds, skip ahead to the [Quick start](#quick-start).
+Otherwise an OS-aware, idempotent bootstrap is included:
+
+```bash
+./scripts/devops/bootstrap-container-engine.sh
+```
+
+It sets up a headless, free engine — **macOS / Linux → [Colima](https://github.com/abiosoft/colima)**,
+**Windows → [Podman](https://podman.io)** — installs and starts it, removes Docker Desktop's `credsStore`
+(which otherwise breaks headless image pulls), and verifies `docker info`, `buildx`, and `compose`. See
+[`.claude/skills/container-build/`](.claude/skills/container-build/SKILL.md) for engine gotchas.
+
 ## Quick start
 
 ```bash
