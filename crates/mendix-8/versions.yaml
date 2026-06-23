@@ -1,0 +1,27 @@
+# Mendix v8 versions verified against this crate.
+# When adding a new version, build + smoke-test it, then add the row.
+#
+# MX8 is out of standard Mendix support, but the FINAL 8.18 LTS patch
+# (8.18.35.97) is still served from the public CDN — so it is a normal
+# recipe-pull crate. Older MX8 patches are NOT all CDN-hosted (e.g.
+# 8.18.21.4259 → 404); for those see PORTAL-DOWNLOAD.md.
+
+crate_version: "0.1.0"
+default_mendix_version: "8.18.35.97"
+
+supported:
+  - mendix_version: "8.18.35.97"
+    cdn_url: "https://cdn.mendix.com/runtime/mendix-8.18.35.97.tar.gz"
+    java_version: 11               # MX 8.18 is certified on Java 8 AND 11; 11 chosen here
+    cdn_status: "200 (verified 2026-06-23)"
+    image_smoke: "pending"         # no MX8 fixture app in the corpus yet
+    notes: >
+      Final Mendix 8.18 LTS patch; CDN-available. Java 11 base (runs Java-8
+      bytecode); rebuild on Temurin 8 if your app pins Java 8.
+
+# Older MX8 patches that are NOT on the public CDN — obtain via the Mendix
+# portal (see PORTAL-DOWNLOAD.md) and override RUNTIME_CDN_BASE at build.
+portal_only:
+  - mendix_version: "8.18.21.4259"
+    cdn_status: "404 (not hosted)"
+    obtain: "Mendix portal / Studio Pro 8 install — see PORTAL-DOWNLOAD.md"
