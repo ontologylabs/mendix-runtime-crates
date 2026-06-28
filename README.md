@@ -15,6 +15,8 @@ is pulled from the Mendix CDN, not committed) → `docker run` with your unzippe
 bind-mounted. One image per Mendix version, reused across every app at that version,
 zero dangling layers. **[Jump to Quick start ↓](#quick-start)**
 
+**Full write-up:** [Running Mendix apps headless: the runtime-crates pattern](https://mxto.ai/blog/mendix-runtime-crates), on [mxto.ai](https://mxto.ai).
+
 > If you searched for *run a Mendix app in Docker*, *dockerize a Mendix app*, *Mendix
 > runtime Docker image*, *Mendix without Studio Pro*, *self-hosted Mendix container*,
 > or *Mendix 10 LTS Docker image* — this is that.
