@@ -106,6 +106,14 @@ which includes step-by-step agent download-instructions.
   is mounted into the VM; keep your project under `$HOME` (or stage a copy there).
 * **Root-owned `.mda` on Linux** — the build container runs as root to write the
   output into your bind-mount; pass `--user $(id -u)` if you need host-uid output.
+* **`Could not find widget '<Name>' in the 'widgets' directory`** (build fails with
+  consistency errors) — the project references custom widgets whose compiled `.mpk`
+  binaries aren't present under `widgets/`. This is an **incomplete checkout**, not a
+  toolchain fault: `.mpk` files are versioned project assets (not derivable, not on the
+  CDN). Verify before building — `ls widgets/*.mpk` should be non-empty for any project
+  using custom widgets — and restore them from your Team Server / VCS checkout if absent.
+  (Seen on a MoneyWorksPortal MX7 checkout: an empty `widgets/` produced 14 such errors
+  for FileDocumentViewer, SprintrFeedbackWidget, CustomString, MobileFeatures, BarcodeScanner.)
 
 ## Provenance & licence
 
