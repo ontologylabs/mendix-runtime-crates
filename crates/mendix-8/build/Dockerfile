@@ -57,6 +57,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libicu70 \
         libssl3 \
         sqlite3 \
+        mono-complete \
     && rm -rf /var/lib/apt/lists/*
 
 # Layer 2 — Mendix build toolchain tarball (mxbuild + mx). ~300-500 MB download.
@@ -75,13 +76,18 @@ RUN set -eux; \
     echo "Extracting..."; \
     tar -xzf /tmp/mxbuild.tar.gz -C /opt/mxtools; \
     rm /tmp/mxbuild.tar.gz; \
-    test -f /opt/mxtools/modeler/mxbuild || { \
-        echo "FATAL: modeler/mxbuild not found at expected path /opt/mxtools/modeler/mxbuild."; \
-        echo "Tarball top-level may have changed. Inspecting:"; \
+    if [ -f /opt/mxtools/modeler/mxbuild ]; then \
+        chmod +x /opt/mxtools/modeler/mxbuild /opt/mxtools/modeler/mx 2>/dev/null || true; \
+    elif [ -f /opt/mxtools/modeler/mxbuild.exe ]; then \
+        echo "Windows-only mxbuild (.NET Framework, MX7/8) — wiring Mono wrappers"; \
+        printf '#!/bin/sh\nexec mono /opt/mxtools/modeler/mxbuild.exe "$@"\n' > /opt/mxtools/modeler/mxbuild; \
+        [ -f /opt/mxtools/modeler/mx.exe ] && printf '#!/bin/sh\nexec mono /opt/mxtools/modeler/mx.exe "$@"\n' > /opt/mxtools/modeler/mx || true; \
+        chmod +x /opt/mxtools/modeler/mxbuild /opt/mxtools/modeler/mx 2>/dev/null || true; \
+    else \
+        echo "FATAL: neither modeler/mxbuild nor modeler/mxbuild.exe present."; \
         find /opt/mxtools -maxdepth 3 -type f -name 'mx*'; \
         exit 1; \
-    }; \
-    chmod +x /opt/mxtools/modeler/mxbuild /opt/mxtools/modeler/mx 2>/dev/null || true; \
+    fi; \
     echo "Mendix ${MENDIX_VERSION} build toolchain ready at /opt/mxtools/modeler/"
 
 # Mendix mxbuild — MX 11's .NET toolchain in particular — creates settings under
