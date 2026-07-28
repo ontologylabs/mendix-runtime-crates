@@ -14,6 +14,26 @@ supported:
     image_build: "verified 2026-06-23 — builds clean, binaries resolve, entrypoint runs (650 MB, amd64)"
     image_smoke: "pending — full .mpr → .mda compile needs a licensed MX11 project"
     notes: "Pairs with the mendix-11 runtime crate (same default version). Reference crate for 7/8/9/10 build crates."
+  - mendix_version: "11.12.1"
+    cdn_url: "https://cdn.mendix.com/runtime/mxbuild-11.12.1.tar.gz"
+    java_version: 21          # JDK (mxbuild compiles javasource at release 21)
+    cdn_status: "200 (verified 2026-07-28)"
+    image_build: "verified 2026-07-28 - builds clean from the unmodified crate recipe (3.34 GB, amd64; Docker 29.6.1)"
+    image_smoke: >
+      VERIFIED 2026-07-28 - first MX 11 build crate exercised against a REAL project. Both `check`
+      and `build` load the Mendix Purchase Request starter template (marketplace 118328, MX 11.12.1),
+      enumerate model errors across modules, and report them.
+    notes: >
+      Smoke honesty: no .mda was produced, because the UNMODIFIED vendor template does not pass
+      `mx check` under 11.12.1 - 37 x CE0456 "Condition for visibility needs to be updated.", every
+      one on a Container/Accordion inside a WorkflowCommons snippet. Neither `mx update-widgets` nor
+      `mx convert -p -s` repairs them (both exit 0, 37 -> 37). WorkflowCommons 4.10.0 declares itself
+      upgraded to Mendix 11.11.0, and the Studio Pro 11.6.0/11.9.0 release notes add "a consistency
+      error for invalid conditional settings at top-level widgets" - so this is most likely vendor
+      content validated against an older check, not a crate defect. INFERENCE, not a sourced fact:
+      the code CE0456 is not publicly documented anywhere we could find. The toolchain itself is
+      proven to discriminate - injecting a type-invalid Decimal default produced exactly the one
+      expected extra error and nothing else.
 
 planned:
   - mendix_version: "11.0.0"
