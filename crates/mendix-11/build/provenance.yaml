@@ -36,3 +36,33 @@ images:
       and the verified runtime-crate recipe-pull pattern. Image build + binary
       resolution + entrypoint are verified (2026-06-23); the remaining release gate
       is a real-project MDA compile.
+
+  - mendix_version: "11.12.1"
+    cdn_source_url: "https://cdn.mendix.com/runtime/mxbuild-11.12.1.tar.gz"
+    base_image: "eclipse-temurin:21-jdk-jammy"
+    java_version: 21
+    platform: "linux/amd64"
+    image_tags:
+      - "ontologylabs/mendix-mxbuild:11.12.1"
+    image_digest: "sha256:bb3f69e6bbcf305cfb50e9f28a8e07e52a564c8a59daaeb09b6a371028dea742"
+    image_manifest_list: "sha256:fe5623d0e91999404a9b740669e8380f586eadbc39b135c49eb5bde9a40355a0"
+    image_size_bytes: 3340000000
+    built_at: "2026-07-28"
+    platform_build: "linux/amd64 native on Debian, Docker 29.6.1 (buildkit)"
+    image_verified:
+      built: "exit 0 - recipe-pull curl of mxbuild-11.12.1.tar.gz from CDN succeeded; crate Dockerfile UNMODIFIED (MENDIX_VERSION build-arg only)"
+      layout: "modeler/mxbuild, modeler/mx, modeler/tools/gradle all resolve at /opt/mxtools/modeler"
+      entrypoint: "build.sh runs; `version` reports 'Mendix build crate - toolchain version 11.12.1 (mxbuild + mx)'"
+      label: "ai.ayios.mendix-version=11.12.1 on the built image"
+      mx_executes: "mx runs natively (no emulation): check / update-widgets / convert / show-version all parse and execute"
+    smoke_verified: >
+      REAL-PROJECT LEG RUN 2026-07-28 (first for any MX 11 build crate). Subject: Mendix Purchase
+      Request starter template (marketplace 118328), MX 11.12.1, pristine single-commit checkout.
+      `mxbuild build` and `mx check` both load the project and enumerate model errors across modules.
+      NO .mda was produced - the unmodified vendor template fails its own consistency check with
+      37 x CE0456 (all in WorkflowCommons snippets; see versions.yaml notes). So the leg proves the
+      TOOLCHAIN works end-to-end on a real model; it does NOT yet prove a clean .mpr -> .mda package.
+      Discrimination control: injecting a type-invalid Decimal attribute default into the project
+      produced exactly one additional, correctly-attributed error and no others - the check is not
+      short-circuiting at the first failing module.
+    remaining_gate: "a clean .mpr -> .mda package on a project that passes `mx check` at 11.12.1"
