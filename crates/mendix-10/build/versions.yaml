@@ -14,5 +14,31 @@ supported:
     image_smoke: "pending"    # image build + `mx version` not yet run in CI
     notes: "Pairs with the mendix-10 runtime crate (same default version)."
 
+  - mendix_version: "10.24.22.113362"
+    cdn_url: "https://cdn.mendix.com/runtime/mxbuild-10.24.22.113362.tar.gz"
+    java_version: 21          # JDK (mxbuild compiles javasource at release 21)
+    cdn_status: "200 (verified 2026-09-17; content-length 847061014)"
+    image_build: >
+      verified 2026-09-17 - builds clean from the unmodified crate recipe, 2m26s WALL INCLUDING
+      the 847 MB CDN pull, on one 40-core Linux host (Docker 29.6.1, overlayfs). /opt/mxtools is
+      1.6 GB in the finished image. A rebuild after editing only build.sh reuses the toolchain
+      layer and takes ~2s.
+    image_smoke: >
+      VERIFIED 2026-09-17 - and this is the FIRST crate row in this repo whose smoke actually
+      PRODUCED AN .mda. A real ~7,000-file MX 10.24.22 line-of-business project (not the vendor
+      template) compiled end to end: `BUILD SUCCEEDED`, an 84 MB / 1,774-entry .mda, over three
+      independent runs. The project is not committed here and is not ours to publish - what is
+      published is the measurement.
+    timings: >
+      Three runs on the same host and project, stated as what they are (ONE host, ONE day, ONE
+      project - an order of magnitude, not a promise): 2m05s, 2m10s, 1m53s.
+      ⚠ THE SECOND RUN WAS NOT FASTER THAN THE FIRST, AND THAT IS A PROPERTY OF mxbuild, NOT A
+      MEASUREMENT FAILURE. mxbuild's own first steps are "Cleaning app bundle log file... Cleaning
+      web deployment directory..." - it discards the deployment directory every run, so there is
+      NO warm-build cache to plan around. The only cold cost worth caching is the IMAGE.
+    notes: >
+      Newer than the crate default (10.24.13.86719); both are supported. Nothing in the recipe
+      is version-specific beyond MENDIX_VERSION - this row required no Dockerfile change.
+
 planned:
   - mendix_version: "10.18.0"

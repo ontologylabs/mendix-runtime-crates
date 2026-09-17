@@ -1,5 +1,59 @@
 # Changelog — Mendix 10 Build Crate
 
+## [0.1.1] — 2026-09-17
+
+### Fixed — `build.sh` refuses a MAJOR-version mismatch instead of silently compiling against
+### the wrong toolchain
+
+This crate's safety model is *one image per Mendix MAJOR* — the JDK, the apt dependencies and
+the toolchain are all chosen for that major. Nothing in the container checked that the `.mpr`
+you handed it belonged to the same one, and `build` also auto-injects `--loose-version-check`
+(which exists to tolerate PATCH drift, not a major jump). So handing an MX 7 project to the
+`mendix-10` image compiled it against JDK 21 **silently**, and failed — if at all — far
+downstream with no mention of Java.
+
+* `build` and `check` now read the `.mpr`'s own `_ProductVersion` (via the `sqlite3` already in
+  the image) and **exit 3** naming both versions and the image you should have used, when the
+  MAJORS differ.
+* **PATCH and minor drift inside the major are NOT refused** — that is what
+  `--loose-version-check` is deliberately for, and an SDK commit legitimately bumps a model's
+  product version.
+* **An unreadable or absent `.mpr` WARNS and proceeds.** Refusing there would convert a clear
+  downstream mxbuild error into a confusing upstream one.
+* `MXBUILD_ALLOW_MAJOR_MISMATCH=1` permits a deliberate cross-major experiment, as an explicit
+  act rather than an accident.
+
+### Added — Mendix 10.24.22.113362 to the supported set
+
+No recipe change was needed: nothing in the Dockerfile is version-specific beyond
+`MENDIX_VERSION`. `docker build --build-arg MENDIX_VERSION=10.24.22.113362` produced a working
+image in **2m26s** on one 40-core Linux host (Docker 29.6.1, overlayfs), of which almost all is
+the **847 MB** CDN pull; `/opt/mxtools` is 1.6 GB in the finished image.
+
+⚠ **This is the first row in this crate whose `image_smoke` actually PRODUCED AN `.mda`.** A real
+~7,000-file MX 10.24.22 line-of-business project — not the vendor template — compiled end to end
+to an 84 MB / 1,774-entry `.mda`, three times. Three run times on the same host and project,
+stated as what they are (one host, one day, one project — an order of magnitude, not a promise):
+**2m05s, 2m10s, 1m53s**.
+
+⚠ **The second run was NOT faster than the first, and that is a property of mxbuild rather than a
+measurement failure.** Its own first steps are *"Cleaning app bundle log file… Cleaning web
+deployment directory…"* — it discards the deployment directory every run, so there is **no
+warm-build cache to plan around**. The only cold cost worth caching is the image, once per
+Mendix version.
+
+### Added — the guard ships its own fixture
+
+`docker run --rm <image> selftest` runs the guard against planted inputs **inside the image**,
+with no project, no network and no CDN. A guard that has never refused a fabricated input is not
+a guard, so the fixture plants the cases it must REFUSE (every other major, swept — not one
+hand-picked example) *and* the cases it must ADMIT (a matching major — the mirror control, run
+FIRST so a refusal below cannot be measuring the fixture; patch drift; the explicit override;
+and both unmeasurable shapes). Exit 0 = PASS, 1 = FAIL.
+
+Measured 2026-09-17 on the `mendix-10` image at 10.24.22.113362: **10 arms, all PASS**, and a
+real project build through the guarded entrypoint was unaffected (`BUILD SUCCEEDED`, 1m53s).
+
 ## [0.1.0] — 2026-06-23
 
 Initial release. The build (mxbuild + mx) companion to the mendix-10 runtime crate.
