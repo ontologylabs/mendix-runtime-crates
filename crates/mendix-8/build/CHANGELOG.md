@@ -1,5 +1,40 @@
 # Changelog — Mendix 8 Build Crate
 
+## [0.1.1] — 2026-09-17
+
+### Fixed — `build.sh` refuses a MAJOR-version mismatch instead of silently compiling against
+### the wrong toolchain
+
+This crate's safety model is *one image per Mendix MAJOR* — the JDK, the apt dependencies and
+the toolchain are all chosen for that major. Nothing in the container checked that the `.mpr`
+you handed it belonged to the same one, and `build` also auto-injects `--loose-version-check`
+(which exists to tolerate PATCH drift, not a major jump). So handing an MX 7 project to the
+`mendix-10` image compiled it against JDK 21 **silently**, and failed — if at all — far
+downstream with no mention of Java.
+
+* `build` and `check` now read the `.mpr`'s own `_ProductVersion` (via the `sqlite3` already in
+  the image) and **exit 3** naming both versions and the image you should have used, when the
+  MAJORS differ.
+* **PATCH and minor drift inside the major are NOT refused** — that is what
+  `--loose-version-check` is deliberately for, and an SDK commit legitimately bumps a model's
+  product version.
+* **An unreadable or absent `.mpr` WARNS and proceeds.** Refusing there would convert a clear
+  downstream mxbuild error into a confusing upstream one.
+* `MXBUILD_ALLOW_MAJOR_MISMATCH=1` permits a deliberate cross-major experiment, as an explicit
+  act rather than an accident.
+
+### Added — the guard ships its own fixture
+
+`docker run --rm <image> selftest` runs the guard against planted inputs **inside the image**,
+with no project, no network and no CDN. A guard that has never refused a fabricated input is not
+a guard, so the fixture plants the cases it must REFUSE (every other major, swept — not one
+hand-picked example) *and* the cases it must ADMIT (a matching major — the mirror control, run
+FIRST so a refusal below cannot be measuring the fixture; patch drift; the explicit override;
+and both unmeasurable shapes). Exit 0 = PASS, 1 = FAIL.
+
+Measured 2026-09-17 on the `mendix-10` image at 10.24.22.113362: **10 arms, all PASS**, and a
+real project build through the guarded entrypoint was unaffected (`BUILD SUCCEEDED`, 1m53s).
+
 ## [0.1.0] — 2026-06-23
 
 Initial release. The build (mxbuild + mx) companion to the mendix-8 runtime crate.
