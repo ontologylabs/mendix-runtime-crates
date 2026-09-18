@@ -98,5 +98,13 @@ Pass any of these explicitly to override.
 * **No Mendix binary is committed.** The toolchain is fetched from the CDN at build,
   on your licensed machine (D-DOCKER-LIB-002). See repo `guard.sh`.
 
+This crate ships a **major-version guard** (`build.sh`): it refuses, loudly, if
+the project you hand it isn't Mendix 10 — see
+[the guard + `selftest` walkthrough](../../../docs/building-mendix-apps-in-docker.md#the-major-version-guard).
+For measured image-build and compile wall-time (and why there's no warm-build
+cache), see [What this costs](../../../docs/building-mendix-apps-in-docker.md#what-this-costs).
+
 See [`provenance.yaml`](provenance.yaml) for the exact CDN source and
-[`versions.yaml`](versions.yaml) for verified versions.
+[`versions.yaml`](versions.yaml) for verified versions — including a real
+production-sized `.mda` smoke at `10.24.22.113362`, a newer patch than this
+crate's default.

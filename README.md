@@ -78,7 +78,7 @@ pulled from the same CDN as `mxbuild-<version>.tar.gz`. See
 | Build crate | mxbuild version | JDK | Base image | Status |
 |---|---|---|---|---|
 | [`crates/mendix-11/build`](crates/mendix-11/build) | `11.6.4` | Java 21 | `eclipse-temurin:21-jdk-jammy` | image-verified¹ |
-| [`crates/mendix-10/build`](crates/mendix-10/build) | `10.24.13.86719` | Java 21 | `eclipse-temurin:21-jdk-jammy` | recipe (CDN 200) |
+| [`crates/mendix-10/build`](crates/mendix-10/build) | `10.24.13.86719` | Java 21 | `eclipse-temurin:21-jdk-jammy` | **MDA-verified²** (default patch: recipe, CDN 200) |
 | [`crates/mendix-9/build`](crates/mendix-9/build) | `9.24.20.33307` | Java 11 | `eclipse-temurin:11-jdk-jammy` | recipe (CDN 200) |
 | [`crates/mendix-8/build`](crates/mendix-8/build) | `8.18.35.97` | Java 11 | `eclipse-temurin:11-jdk-jammy` | recipe (CDN 200) |
 | [`crates/mendix-7/build`](crates/mendix-7/build) | `7.23.8.58888` | Java 8 | `eclipse-temurin:8-jdk-jammy` | recipe (CDN 200) |
@@ -86,6 +86,14 @@ pulled from the same CDN as `mxbuild-<version>.tar.gz`. See
 ¹ *image-verified* = the image builds, the CDN toolchain pull succeeds, and the
 binaries + entrypoint resolve and run; a full `.mpr → .mda` compile against a
 licensed project is the remaining smoke gate (per crate `provenance.yaml`).
+² *MDA-verified* = at a newer patch than the crate's listed default
+(`10.24.22.113362`), this crate compiled a real ~7,000-file production project
+end to end (`BUILD SUCCEEDED`, an 84 MB `.mda`) over three independent runs —
+see [`crates/mendix-10/build/versions.yaml`](crates/mendix-10/build/versions.yaml)
+for the measured timings and [Building MDAs in Docker](docs/building-mendix-apps-in-docker.md#what-this-costs)
+for what it costs. The crate's default patch (`10.24.13.86719`) has not itself
+been build-tested — pin the newer patch with `--build-arg MENDIX_VERSION=10.24.22.113362`
+if you want the version that has actually been proven.
 *recipe (CDN 200)* = authored to the same proven pattern with the CDN source
 URL verified reachable, image build pending.
 
