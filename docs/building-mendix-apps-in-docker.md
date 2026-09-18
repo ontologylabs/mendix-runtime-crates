@@ -85,6 +85,61 @@ echo $?   # 0 = clean · 1 = errors · 2 = warnings only
 `--java-exe-path`, `--gradle-home`, `--loose-version-check`) and defaults the
 output to `/workspace/<App>.mda`. Pass any of those explicitly to override.
 
+## What this costs
+
+Numbers below are one MEASUREMENT, not a promise — one 40-core Linux host, Docker
+29.6.1, overlayfs, `docker build --no-cache` (a genuinely cold pull, no layer
+reuse). Your network and CPU will differ; treat these as an order of magnitude.
+
+| step | measured | notes |
+|---|---|---|
+| Build the image (once per Mendix version) | **~2m10s–2m26s** | includes an **~700–850 MB** CDN pull of `mxbuild-<version>.tar.gz` (size scales with Mendix version — MX 10.24 measured 847 MB) |
+| Rebuild after editing only `build.sh` | **~2s** | the toolchain layer is cached; only the small `COPY build.sh` layer reruns |
+| Compile a real project (`mxbuild`, cold) | **~2m05s** | a ~7,000-file production-sized MX 10.24 project, `BUILD SUCCEEDED`, 84 MB `.mda` |
+| Compile the **same** project again (warm) | **no faster — sometimes slower** | see below |
+
+⚠ **There is no warm-build cache, and planning around one will disappoint you.**
+`mxbuild`'s own first steps are "Cleaning app bundle log file... Cleaning web
+deployment directory..." — it discards the project's `deployment/` directory on
+**every** run, toolchain-side, before it does anything else. Three consecutive
+runs against the same project and container measured 2m05s, 2m10s, 1m53s — the
+second run was not faster than the first. The only cold cost worth caching is
+the **image** (the CDN pull); a project's `deployment/` output buys you nothing
+and is safe to `--exclude` if you're staging files onto another host.
+
+Image size on disk is **~2.4–3.3 GB** depending on Mendix major (more recent
+majors bundle a larger toolchain) — budget for that per version you build, once.
+
+## The major-version guard
+
+Each build crate is baked for **one Mendix major**. `build.sh` reads your
+project's `_ProductVersion` (via `sqlite3` against the `.mpr`) before compiling,
+and **refuses** with exit code `3` if it doesn't match the image's major:
+
+```
+$ docker run --rm -v /path/to/MyApp:/workspace ontologylabs/mendix-mxbuild:10 build /workspace/App.mpr
+ERROR: MAJOR VERSION MISMATCH. The project is Mendix 12; this image
+       carries the Mendix 10 build toolchain (10.24.13.86719).
+       Use the matching image — ontologylabs/mendix-mxbuild:12 — or an
+       exact tag for your project's version. Compiling across a major would pick the
+       wrong JDK and the wrong model format, and --loose-version-check (injected for
+       PATCH drift) would not stop it.
+       Deliberate cross-major experiment: set MXBUILD_ALLOW_MAJOR_MISMATCH=1.
+```
+
+This is deliberate: a build that silently ran against the wrong JDK and produced
+*something* costs more than one that stopped and said why. **Patch/minor drift
+within the same major is fine** — that's what `--loose-version-check` is for —
+only a MAJOR mismatch refuses. To force a deliberate cross-major experiment
+anyway, set `MXBUILD_ALLOW_MAJOR_MISMATCH=1`.
+
+Every image ships a self-test that exercises the guard against planted inputs,
+entirely inside the container (no project, no network needed):
+
+```bash
+docker run --rm ontologylabs/mendix-mxbuild:10 selftest
+```
+
 ## Mendix 8 note
 
 Mendix 8 is out of standard support, but its final LTS patch (`8.18.35.97`, the
@@ -104,6 +159,15 @@ which includes step-by-step agent download-instructions.
   real CDN-hosted version; probe `curl -sI cdn.mendix.com/runtime/mxbuild-<v>.tar.gz`.
 * **`Project file '/workspace/App.mpr' does not exist`** — on Colima only `$HOME`
   is mounted into the VM; keep your project under `$HOME` (or stage a copy there).
+  **A second, unrelated cause gives the identical message**: `-v` bind mounts are
+  resolved by the Docker **daemon**, not by your shell. If `DOCKER_HOST` points at
+  a remote engine (`docker context ls`; common with a remote builder, an SSH-forwarded
+  daemon, or some cloud CI runners), your bind-mount path is resolved on that remote
+  machine — a path that doesn't exist there is silently **created empty** and the
+  container builds against nothing. Check `echo $DOCKER_HOST` and `docker context ls`
+  before assuming a mount is broken; a `docker run -v <dir>:/w --entrypoint /bin/bash
+  <image> -c "ls -la /w"` that comes back empty when your host directory isn't is the
+  tell.
 * **Root-owned `.mda` on Linux** — the build container runs as root to write the
   output into your bind-mount; pass `--user $(id -u)` if you need host-uid output.
 
