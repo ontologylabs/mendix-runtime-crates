@@ -1,5 +1,24 @@
 # Changelog — Mendix 8 Build Crate
 
+## [0.1.2] — 2026-09-18
+
+### Verified — this crate's FIRST `.mda`-producing smoke
+
+A real, full-content line-of-business project (javasource / theme / userlib / widgets all
+populated, ~2,960 files) compiled end to end through the unmodified crate recipe: `BUILD
+SUCCEEDED`, a 140 MB / 3,569-entry `.mda`, **63s wall** on one 32-core native-x86_64 Linux host.
+The project is not committed here and is not ours to publish — what is published is the
+measurement. See `versions.yaml`.
+
+### Documented — `mx check` is not implemented on this major
+
+The bundled `mx` binary exists (Mono-wrapped from `mx.exe`) but its verb set is only `convert` /
+`create-project` / `update-widgets` — verified via `docker run --entrypoint
+/opt/mxtools/modeler/mx <image> --help`. `build.sh check` therefore always fails with
+`ERROR(S): Verb 'check' is not recognized.`, sourced from the `mx` tool itself. `check` first
+appears in the Mendix 9 toolchain. Documented in the crate README and `versions.yaml` rather
+than left for a stranger to discover from an unexplained tool error.
+
 ## [0.1.1] — 2026-09-17
 
 ### Fixed — `build.sh` refuses a MAJOR-version mismatch instead of silently compiling against

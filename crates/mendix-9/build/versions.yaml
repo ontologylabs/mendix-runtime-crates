@@ -3,7 +3,7 @@
 # mx check), then add the row. The build toolchain (mxbuild + mx) ships on the
 # same CDN as the runtime, as mxbuild-<version>.tar.gz.
 
-crate_version: "0.1.0"
+crate_version: "0.1.1"
 default_mendix_version: "9.24.20.33307"
 
 supported:
@@ -11,7 +11,24 @@ supported:
     cdn_url: "https://cdn.mendix.com/runtime/mxbuild-9.24.20.33307.tar.gz"
     java_version: 11          # JDK (mxbuild compiles javasource at release 11)
     cdn_status: "200 (verified 2026-06-23)"
-    image_smoke: "pending"    # image build + `mx version` not yet run in CI
+    image_smoke: >
+      ATTEMPTED 2026-09-18, NOT YET PRODUCING AN .mda - named honestly rather than left silent.
+      The compile attempt ran against a project whose `theme/`, `resources/` and `javasource/`
+      directories were all locally empty. mxbuild reported a real verdict, not a mount problem
+      (the sentinel mount-proof passed first): 1,336+ cascading errors (mxbuild's own cap on
+      how many it will list) - "Could not find widget '<Name>' in the 'widgets' directory" for
+      every pluggable-widget reference, plus "Design property <X> is not supported by your
+      theme" for every styled element, because there was no theme content to check the
+      properties against. Closing this row for real needs a full project export (theme +
+      widgets + javasource populated), which this run did not have licensed access to obtain
+      from this host. Not a regression: this major has never produced an `.mda` in this crate.
+    check_command: >
+      AVAILABLE on this major - verified via `docker run --entrypoint /opt/mxtools/modeler/mx
+      <image> --help` (2026-09-18): `check`, `convert`, `create-project`, `update-widgets`,
+      `collect-native-deps`, `show-version` are all present. `check` first appears at Mendix 9;
+      it is absent on 7 and 8 (see their versions.yaml). Not independently smoke-tested against
+      a full project this pass - it needs the same complete project content `build` does and
+      would fail the same way against this run's incomplete checkout.
     notes: "Pairs with the mendix-9 runtime crate (same default version)."
 
 planned:

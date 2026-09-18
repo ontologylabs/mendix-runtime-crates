@@ -3,7 +3,7 @@
 # mx check), then add the row. The build toolchain (mxbuild + mx) ships on the
 # same CDN as the runtime, as mxbuild-<version>.tar.gz.
 
-crate_version: "0.1.0"
+crate_version: "0.1.1"
 default_mendix_version: "8.18.35.97"
 
 supported:
@@ -11,7 +11,21 @@ supported:
     cdn_url: "https://cdn.mendix.com/runtime/mxbuild-8.18.35.97.tar.gz"
     java_version: 11          # JDK (mxbuild compiles javasource at release 11)
     cdn_status: "200 (verified 2026-06-23)"
-    image_smoke: "pending"    # image build + `mx version` not yet run in CI
+    image_smoke: >
+      VERIFIED 2026-09-18 - this crate's FIRST `.mda`-producing smoke. A real, full-content
+      line-of-business project (javasource/theme/userlib/widgets all populated, ~2,960 files)
+      compiled end to end: `BUILD SUCCEEDED`, a 140 MB / 3,569-entry `.mda`, 63s wall on one
+      32-core Linux host (Docker, overlayfs, no `--platform` emulation - the build host is
+      native x86_64). The project is not committed here and is not ours to publish - what is
+      published is the measurement.
+    check_command: >
+      NOT AVAILABLE on this major. `docker run <image> check <mpr>` FAILS with `ERROR(S): Verb
+      'check' is not recognized.` - the `mx` binary this crate bakes for 8.18.35.97 only
+      implements `convert` / `create-project` / `update-widgets` (verified via
+      `docker run --entrypoint /opt/mxtools/modeler/mx <image> --help`, 2026-09-18). This is a
+      property of the CDN toolchain itself, not a defect in this crate's `build.sh` - `check`
+      first appears in the Mendix 9 `mx` toolchain. See
+      docs/building-mendix-apps-in-docker.md#mx-check-is-not-available-on-every-major.
     notes: "Pairs with the mendix-8 runtime crate (same default version)."
 
 planned:

@@ -1,5 +1,22 @@
 # Changelog — Mendix 7 Build Crate
 
+## [0.1.2] — 2026-09-18
+
+### Documented — `check` does not exist on this major; the first live `image_smoke` attempt
+
+* **`mx check` is unavailable, structurally.** The 7.23.8.58888 CDN tarball ships `mxbuild.exe`
+  / `mxutil.exe` / `mxconvert.exe` — there is no `mx` (or `mx.exe`) binary at all, so
+  `build.sh check` always exits 1 with `ERROR: mx not found under /opt/mxtools`. Verified via
+  `docker run --entrypoint /bin/bash <image> -c "find /opt/mxtools/modeler -maxdepth 1 -iname
+  'mx*'"`. Documented in the crate README and `versions.yaml` rather than left for a stranger to
+  discover from a confusing error with no explanation.
+* **First live `image_smoke` attempt, not yet closed.** The image itself compiles and its
+  `mxbuild.exe` runs correctly under the Mono wrapper. The compile ran against a project whose
+  `widgets/` directory was locally empty and failed on 14 `Could not find widget
+  '<Name>' in the 'widgets' directory` errors — a real mxbuild verdict about missing content,
+  not a toolchain or mount defect (the bind-mount sentinel proof passed first). See
+  `versions.yaml` for the full account and what's needed to close it.
+
 ## [0.1.1] — 2026-09-17
 
 ### Fixed — `build.sh` refuses a MAJOR-version mismatch instead of silently compiling against

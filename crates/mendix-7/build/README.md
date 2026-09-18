@@ -1,10 +1,14 @@
 # Mendix 7 Build Crate
 
 > A model-agnostic, version-pinned Docker image that compiles **any** Mendix 7.x
-> project (`.mpr`) into a deployable `.mda` — and runs `mx check` — with nothing
-> on the host but Docker. The Mendix build toolchain (`mxbuild` + `mx`) is pulled
-> from the official Mendix CDN at build time; no Studio Pro install, no committed
-> binaries.
+> project (`.mpr`) into a deployable `.mda` — with nothing on the host but Docker.
+> The Mendix build toolchain (`mxbuild`) is pulled from the official Mendix CDN at
+> build time; no Studio Pro install, no committed binaries.
+>
+> ⚠ **This major has no `mx check`.** The Mendix 7 CDN toolchain ships only
+> `mxbuild.exe` / `mxutil.exe` / `mxconvert.exe` — there is no `mx` binary at all.
+> `check` first appears in the Mendix 9 toolchain; see
+> [`mx check` is not available on every major](../../../docs/building-mendix-apps-in-docker.md#mx-check-is-not-available-on-every-major).
 
 This is the **build** companion to the [`mendix-7` runtime crate](../). The build
 crate *produces* the `.mda`; the runtime crate *runs* it.
@@ -62,14 +66,14 @@ cd ../                       # the mendix-7 runtime crate
 docker compose -f tests/docker-compose.smoke.yml up   # or your own compose
 ```
 
-## Validate a model (`mx check`)
+## Validate a model (`mx check`) — NOT AVAILABLE on Mendix 7
 
-```bash
-docker run --rm -v /path/to/project:/workspace \
-    ontologylabs/mendix-mxbuild:7.23.8.58888 \
-    check /workspace/App.mpr
-# exit 0 = clean · 1 = errors · 2 = warnings only
-```
+`docker run <image> check /workspace/App.mpr` will always fail here with
+`ERROR: mx not found under /opt/mxtools` — verified 2026-09-18
+(`docker run --entrypoint /bin/bash <image> -c "find /opt/mxtools/modeler -maxdepth 1 -iname 'mx*'"`
+lists `mxbuild.exe`, `mxutil.exe`, `mxconvert.exe` and no `mx`/`mx.exe`). This is a property of
+the Mendix 7 CDN toolchain itself, not a bug in this crate's `build.sh` dispatch. `build` still
+works normally — only `check` is unavailable on this major.
 
 ## What the entrypoint auto-injects
 

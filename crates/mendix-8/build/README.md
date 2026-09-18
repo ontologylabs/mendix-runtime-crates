@@ -1,10 +1,18 @@
 # Mendix 8 Build Crate
 
 > A model-agnostic, version-pinned Docker image that compiles **any** Mendix 8.x
-> project (`.mpr`) into a deployable `.mda` — and runs `mx check` — with nothing
-> on the host but Docker. The Mendix build toolchain (`mxbuild` + `mx`) is pulled
-> from the official Mendix CDN at build time; no Studio Pro install, no committed
-> binaries.
+> project (`.mpr`) into a deployable `.mda` — with nothing on the host but Docker.
+> The Mendix build toolchain (`mxbuild` + `mx`) is pulled from the official Mendix
+> CDN at build time; no Studio Pro install, no committed binaries.
+>
+> ⚠ **This major's `mx check` is not implemented.** The bundled `mx` tool exists but
+> only implements `convert` / `create-project` / `update-widgets` — `check` first
+> appears in the Mendix 9 toolchain; see
+> [`mx check` is not available on every major](../../../docs/building-mendix-apps-in-docker.md#mx-check-is-not-available-on-every-major).
+>
+> **Verified 2026-09-18: this crate compiles a real project end to end** — `BUILD
+> SUCCEEDED`, a 140 MB / 3,569-entry `.mda`, 63s wall. See
+> [`versions.yaml`](versions.yaml).
 
 This is the **build** companion to the [`mendix-8` runtime crate](../). The build
 crate *produces* the `.mda`; the runtime crate *runs* it.
@@ -62,14 +70,14 @@ cd ../                       # the mendix-8 runtime crate
 docker compose -f tests/docker-compose.smoke.yml up   # or your own compose
 ```
 
-## Validate a model (`mx check`)
+## Validate a model (`mx check`) — NOT AVAILABLE on Mendix 8
 
-```bash
-docker run --rm -v /path/to/project:/workspace \
-    ontologylabs/mendix-mxbuild:8.18.35.97 \
-    check /workspace/App.mpr
-# exit 0 = clean · 1 = errors · 2 = warnings only
-```
+`docker run <image> check /workspace/App.mpr` will always fail here with
+`ERROR(S): Verb 'check' is not recognized.` — verified 2026-09-18
+(`docker run --entrypoint /opt/mxtools/modeler/mx <image> --help` lists only `convert`,
+`create-project`, `update-widgets`). This is a property of the Mendix 8 CDN toolchain itself,
+not a bug in this crate's `build.sh` dispatch. `build` still works normally — only `check` is
+unavailable on this major.
 
 ## What the entrypoint auto-injects
 
