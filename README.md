@@ -85,7 +85,7 @@ Mendix 9. See
 |---|---|---|---|---|
 | [`crates/mendix-11/build`](crates/mendix-11/build) | `11.6.4` | Java 21 | `eclipse-temurin:21-jdk-jammy` | image-verified¹ |
 | [`crates/mendix-10/build`](crates/mendix-10/build) | `10.24.13.86719` | Java 21 | `eclipse-temurin:21-jdk-jammy` | **MDA-verified²** (default patch: recipe, CDN 200) |
-| [`crates/mendix-9/build`](crates/mendix-9/build) | `9.24.20.33307` | Java 11 | `eclipse-temurin:11-jdk-jammy` | recipe (CDN 200) — first `.mda` attempt made³, not yet closed |
+| [`crates/mendix-9/build`](crates/mendix-9/build) | `9.24.20.33307` | Java 11 | `eclipse-temurin:11-jdk-jammy` | **MDA-verified⁵** (default patch: recipe, CDN 200) |
 | [`crates/mendix-8/build`](crates/mendix-8/build) | `8.18.35.97` | Java 11 | `eclipse-temurin:11-jdk-jammy` | **MDA-verified⁴** |
 | [`crates/mendix-7/build`](crates/mendix-7/build) | `7.23.8.58888` | Java 8 | `eclipse-temurin:8-jdk-jammy` | recipe (CDN 200) — first `.mda` attempt made³, not yet closed |
 
@@ -104,10 +104,18 @@ if you want the version that has actually been proven.
 resolve) and a real compile was run against it — but the project available for the attempt
 was missing its `theme`/`widgets` content locally, so mxbuild refused on missing-content
 errors rather than producing an `.mda`. Named honestly rather than left `pending` silently;
-see each crate's `versions.yaml` for the exact errors and what's needed to close it.
+see each crate's `versions.yaml` for the exact errors (on Mendix 7: 14 errors resolving to
+5 exactly-named missing widgets) and what's needed to close it.
 ⁴ *MDA-verified* = a real, full-content project (~2,960 files) compiled end to end
 (`BUILD SUCCEEDED`, a 140 MB / 3,569-entry `.mda`, 63s wall) — see
 [`crates/mendix-8/build/versions.yaml`](crates/mendix-8/build/versions.yaml).
+⁵ *MDA-verified* = at a newer patch than the crate's listed default (`9.24.36.73625`), this
+crate compiled a real full-content project (2,704 files: javasource 1,677 / theme 197 /
+widgets 52 / userlib 301) end to end (`BUILD SUCCEEDED`, a 180 MB / 4,020-entry `.mda`, 124s
+wall) — see [`crates/mendix-9/build/versions.yaml`](crates/mendix-9/build/versions.yaml). The
+crate's default patch (`9.24.20.33307`) has not itself been build-tested against a
+full-content project — pin the newer patch with `--build-arg MENDIX_VERSION=9.24.36.73625`
+if you want the version that has actually been proven.
 *recipe (CDN 200)* = authored to the same proven pattern with the CDN source
 URL verified reachable, image build pending.
 

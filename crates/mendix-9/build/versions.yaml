@@ -31,5 +31,34 @@ supported:
       would fail the same way against this run's incomplete checkout.
     notes: "Pairs with the mendix-9 runtime crate (same default version)."
 
+  - mendix_version: "9.24.36.73625"
+    cdn_url: "https://cdn.mendix.com/runtime/mxbuild-9.24.36.73625.tar.gz"
+    java_version: 11          # JDK (mxbuild compiles javasource at release 11)
+    cdn_status: "200 (verified 2026-09-18)"
+    image_build: >
+      verified 2026-09-18 - builds clean from the unmodified crate recipe (fresh image, this
+      exact tag had never been built before), 43s wall on one 40-core Linux host (Docker 29.6.1,
+      overlayfs, no --platform emulation - native x86_64 host).
+    image_smoke: >
+      VERIFIED 2026-09-18 - this crate's FIRST `.mda`-producing smoke on Mendix 9. The Edubond V2
+      fixture (matching this crate's own runtime-side `planned:` entry in
+      ../versions.yaml) - a real, full-content project (javasource 1,677 files / theme 197 /
+      widgets 52 / userlib 301, 2,704 files staged) - compiled end to end: `BUILD SUCCEEDED`, a
+      188,736,234-byte (180 MB) / 4,020-entry `.mda`, 124s wall on one 40-core Linux host.
+      Verified as a real zip archive containing `model/model.mdp` via `python3 -m zipfile`
+      (`testzip()` returned None - no corrupt members), not just a non-zero exit. The project is
+      not committed here and is not ours to publish - what is published is the measurement. The
+      on-disk checkout has two DECOY zero-byte `.mpr` files alongside the real one (`App.mpr`,
+      `Edubond V2.mpr`) - staged a clean copy excluding both before handing it to the oracle,
+      since a naive `find … -name '*.mpr' | head -1` would pick a decoy alphabetically and read
+      as an empty/unusable project.
+    check_command: >
+      Not independently smoke-tested against this project this pass (see the 9.24.20.33307 row
+      above for the general `mx check` availability finding - unaffected by this row, which is
+      only about `build`).
+    notes: >
+      Newer than the crate default (9.24.20.33307); both are supported. Nothing in the recipe is
+      version-specific beyond MENDIX_VERSION - this row required no Dockerfile change.
+
 planned:
   - mendix_version: "9.24.0"

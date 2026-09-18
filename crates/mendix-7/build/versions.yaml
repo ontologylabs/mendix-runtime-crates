@@ -12,15 +12,39 @@ supported:
     java_version: 8          # JDK (mxbuild compiles javasource at release 8)
     cdn_status: "200 (verified 2026-06-23)"
     image_smoke: >
-      ATTEMPTED 2026-09-18, NOT YET PRODUCING AN .mda - named honestly rather than left silent.
-      The image itself is proven (mxbuild.exe found and Mono-wrapped, toolchain extracts
-      cleanly). The compile attempt ran against a project whose `widgets/` directory was
-      locally empty and failed with 14 `Could not find widget '<Name>' in the
-      'widgets' directory` errors - a real mxbuild verdict about missing App Store widget
-      packages, not a toolchain or mount problem (the sentinel mount-proof passed first).
-      Closing this row for real needs a project export with its widget `.mpk`s present, which
-      this run did not have licensed access to obtain from this host. Not a regression: this
-      major has never produced an `.mda` in this crate.
+      ATTEMPTED 2026-09-18, NOT YET PRODUCING AN .mda - named honestly rather than left silent,
+      and the missing-widget set is now named exactly rather than only counted. The image itself
+      is proven (mxbuild.exe found and Mono-wrapped, toolchain extracts cleanly; the bind-mount
+      sentinel proof passed before the compile ran, so this is not the wrong-namespace-mount
+      class). The only local MX7 checkout on this host (`MoneyWorksPortal-trunk`) has its `.mpr`
+      genuinely present (44 MB, version-readable) but its `widgets/`, `theme/`, `javasource/`,
+      `resources/` and `userlib/` directories are ALL empty (0 files each, confirmed by
+      `find … -type f | wc -l` before attributing the failure) - this is the only MX7 checkout
+      anywhere on this host (verified: `find / -maxdepth 4 -iname '*moneyworksportal*' -type d`
+      returns nothing else). `BUILD FAILED` with exactly 14 `Could not find widget '<Name>' in
+      the 'widgets' directory` errors, 5 DISTINCT widget names, reproduced 2026-09-18 with the
+      full mxbuild log captured (not eyeballed from a truncated tail):
+        - 'File Document Viewer' (6 occurrences: ClientStatements/Statements,
+          TransactionImageUploader/TransactionsImageUploader x5)
+        - 'CustomString' (5 occurrences: Mailers/InvoiceMailer_Overview x2,
+          SendGridAPI/ServerSettings, SendGridAPI/Mail x2)
+        - 'Feedback Widget' (1: Atlas_UI_Resources/FeedbackWidget)
+        - 'Mobile Features' (1: Atlas_UI_Resources/MobileFeatures)
+        - 'Barcode scanner' (1: Core/PhoneHome)
+      A same-named-project sibling checkout on this host at Mendix 8
+      (`MoneyWorksPortal-MDX8/widgets/`) carries `.mpk` packages whose `<name>` tags match THREE
+      of the five exactly - FileDocumentViewer.mpk ("File Document Viewer"), CustomString.mpk
+      ("CustomString"), MobileFeatures.mpk ("Mobile Features") - plus a "Barcode scanner"-named
+      package under a different filename (BarcodeScannerForPhoneGap.mpk). Deliberately NOT used:
+      a widget package built and packaged for a different Mendix major is not evidence the MX7
+      recipe works, and using it would manufacture a false green no stranger could reproduce
+      from a real MX7 export. Confirmed absent: no `.mpk` ANYWHERE on this host (695 packages
+      swept across all local checkouts) declares a `<name>` tag matching "Feedback Widget"
+      exactly - the closest is SprintrFeedbackWidget.mpk's "Feedback & Collaboration Widget",
+      a different caption. Closing this row for real needs a full MX7 project export with its
+      own widget `.mpk`s present, which this run did not have licensed Team Server access to
+      obtain from this host (same SVN-credential-location blocker as the prior pass; the PAT
+      itself is alive). Not a regression: this major has never produced an `.mda` in this crate.
     check_command: >
       NOT AVAILABLE on this major, structurally. The 7.23.8.58888 CDN toolchain ships
       `mxbuild.exe` / `mxutil.exe` / `mxconvert.exe` - there is NO `mx` (or `mx.exe`) binary at

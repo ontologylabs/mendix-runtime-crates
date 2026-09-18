@@ -1,5 +1,26 @@
 # Changelog — Mendix 9 Build Crate
 
+## [0.1.3] — 2026-09-18
+
+### Verified — this crate's FIRST `.mda`-producing smoke on Mendix 9, at a newer patch
+
+* The Edubond V2 fixture (matching this crate's own runtime-crate `planned:` entry,
+  `crates/mendix-9/versions.yaml`) at Mendix `9.24.36.73625` - a real, full-content project
+  (javasource 1,677 files / theme 197 / widgets 52 / userlib 301) - compiled end to end:
+  `BUILD SUCCEEDED`, a 180 MB / 4,020-entry `.mda`, 124s wall. Verified as a real zip archive
+  containing `model/model.mdp`, zip integrity checked (`testzip()` clean), not just a non-zero
+  exit. See `versions.yaml` for the full measurement.
+* This closes the `[0.1.2]` entry's "not yet closed" for the *build* half of this major — the
+  prior row's 9.24.20.33307 attempt (against a locally incomplete project) stands unchanged,
+  beside this one, not over it: two different projects, two different verdicts, same crate.
+* **Found only by enumerating the checkout rather than globbing for "the" `.mpr`.** This project's
+  own directory carries three `.mpr` files, two of them zero bytes (`App.mpr`, a
+  space-named `Edubond V2.mpr`). `find … -name '*.mpr' | head -1` picks a decoy and reads as an
+  unusable, content-empty checkout — this is exactly what made this same checkout look empty on
+  first inspection this pass, before it was enumerated by content rather than by name. Staged a
+  clean copy that excludes both decoys before handing it to `scripts/ops/mxbuild-oracle.sh`, so
+  the oracle's own `find … | head -1` could not repeat the mistake.
+
 ## [0.1.2] — 2026-09-18
 
 ### Documented — `mx check` confirmed available; first live `image_smoke` attempt, not yet closed

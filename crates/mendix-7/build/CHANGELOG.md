@@ -1,5 +1,25 @@
 # Changelog — Mendix 7 Build Crate
 
+## [0.1.3] — 2026-09-18
+
+### Documented — the 14 missing-widget errors named exactly; refusal stands, on firmer ground
+
+* Reproduced the `[0.1.2]` `BUILD FAILED` against the same, and still the only, local MX7
+  checkout on this host and captured the full log: 14 `Could not find widget` errors resolve to
+  **5 distinct widget names** — 'File Document Viewer', 'CustomString', 'Feedback Widget',
+  'Mobile Features', 'Barcode scanner' — each with its exact flow/page location. See
+  `versions.yaml` for the full accounting.
+* Searched this host for the 5 packages: a sibling checkout of the SAME project at Mendix 8
+  carries `.mpk`s matching 4 of the 5 by declared `<name>` (one under a different filename),
+  and nothing anywhere on the host carries an exact "Feedback Widget" caption. **Deliberately
+  did not use the MX8-sibling packages to close this row** — a widget built for a different
+  major is not the MX7 recipe working, and doing so would manufacture a false green nobody
+  could reproduce from a real MX7 project export. The refusal stands; what changed is that it
+  is now exact rather than merely counted.
+* Confirmed, again, that this is the only MX7 checkout on the host (`find / -maxdepth 4 -iname
+  '*moneyworksportal*' -type d`) and that all five of its content directories (`widgets/`,
+  `theme/`, `javasource/`, `resources/`, `userlib/`) are genuinely empty, not merely sparse.
+
 ## [0.1.2] — 2026-09-18
 
 ### Documented — `check` does not exist on this major; the first live `image_smoke` attempt
