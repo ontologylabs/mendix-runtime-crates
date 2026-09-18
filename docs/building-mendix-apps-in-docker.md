@@ -85,6 +85,31 @@ echo $?   # 0 = clean · 1 = errors · 2 = warnings only
 `--java-exe-path`, `--gradle-home`, `--loose-version-check`) and defaults the
 output to `/workspace/<App>.mda`. Pass any of those explicitly to override.
 
+## `mx check` is not available on every major
+
+The example above uses the `mendix-10` image, where it works. **It does not work on
+every major**, because the `mx` command-line tool itself — not this crate's
+wiring around it — is different per version. Measured directly against each
+crate's own baked toolchain (`docker run --entrypoint /opt/mxtools/modeler/mx
+<image> --help`, or for Mendix 7, `find /opt/mxtools/modeler -iname 'mx*'`, since
+there's no `mx` binary to run `--help` against at all):
+
+| Mendix major | `mx` binary present? | `check` verb present? | what `build.sh check` actually does |
+|---|---|---|---|
+| 7 | **no** — only `mxbuild.exe` / `mxutil.exe` / `mxconvert.exe` | — | exits 1: `ERROR: mx not found under /opt/mxtools` |
+| 8 | yes (Mono-wrapped from `mx.exe`) | **no** — only `convert` / `create-project` / `update-widgets` | invokes `mx check`, which itself exits with `ERROR(S): Verb 'check' is not recognized.` |
+| 9 | yes | **yes** | works as documented above |
+| 10 | yes | **yes** | works as documented above |
+| 11 | yes | **yes** | works as documented above |
+
+Verified 2026-09-18 against a fresh `docker build --no-cache` of each crate (not
+a cached image already sitting on the build host — see
+[Troubleshooting](#troubleshooting)). `build` (the actual `.mpr` → `.mda` compile) is unaffected on every
+major — only the separate `check`-only validation path is missing on 7 and 8.
+If you need pre-build validation on those majors, `build` itself still reports
+every model error before it would otherwise produce an `.mda` (see
+[Troubleshooting](#troubleshooting) for what those errors look like).
+
 ## What this costs
 
 Numbers below are one MEASUREMENT, not a promise — one 40-core Linux host, Docker
@@ -170,6 +195,25 @@ which includes step-by-step agent download-instructions.
   tell.
 * **Root-owned `.mda` on Linux** — the build container runs as root to write the
   output into your bind-mount; pass `--user $(id -u)` if you need host-uid output.
+* **"It worked before but the new guard/feature isn't there"** — Docker will happily
+  reuse an image you built weeks ago under the same tag if you don't force a rebuild.
+  Since `docker build` has no reason to know the recipe (`Dockerfile`/`build.sh`)
+  changed underneath an unchanged `--build-arg MENDIX_VERSION`, a stale local image
+  silently tests an **old** version of this crate, not the one in your checkout —
+  and a test against it is a false negative about anything added since. After
+  pulling or editing this repo, `docker build --no-cache ...` (or `docker rmi` the
+  old tag first) before trusting any behaviour change.
+* **`Could not find widget '<Name>' in the 'widgets' directory`** — your project's
+  `widgets/` folder is missing the `.mpk` for a custom/pluggable widget a page
+  references. This is a genuine mxbuild verdict about the *project*, not this
+  crate: obtain the project export with its `widgets/*.mpk` files present (Studio
+  Pro's own export, or your Team Server checkout's `widgets/` directory, both need
+  to carry them — a `git`/`svn` export that skips binaries will reproduce this).
+* **`Design property <X> is not supported by your theme`** (often dozens or
+  hundreds at once, capped at "Too many errors. Only displaying the first N") —
+  your project's `theme/` folder is missing content the pages reference (usually
+  the Atlas/Atlas Core theme assets). Same cause and same fix as the widgets error
+  above: the project export is incomplete, not the toolchain.
 
 ## Provenance & licence
 

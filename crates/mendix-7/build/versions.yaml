@@ -3,7 +3,7 @@
 # mx check), then add the row. The build toolchain (mxbuild + mx) ships on the
 # same CDN as the runtime, as mxbuild-<version>.tar.gz.
 
-crate_version: "0.1.0"
+crate_version: "0.1.1"
 default_mendix_version: "7.23.8.58888"
 
 supported:
@@ -11,7 +11,24 @@ supported:
     cdn_url: "https://cdn.mendix.com/runtime/mxbuild-7.23.8.58888.tar.gz"
     java_version: 8          # JDK (mxbuild compiles javasource at release 8)
     cdn_status: "200 (verified 2026-06-23)"
-    image_smoke: "pending"    # image build + `mx version` not yet run in CI
+    image_smoke: >
+      ATTEMPTED 2026-09-18, NOT YET PRODUCING AN .mda - named honestly rather than left silent.
+      The image itself is proven (mxbuild.exe found and Mono-wrapped, toolchain extracts
+      cleanly). The compile attempt ran against a project whose `widgets/` directory was
+      locally empty and failed with 14 `Could not find widget '<Name>' in the
+      'widgets' directory` errors - a real mxbuild verdict about missing App Store widget
+      packages, not a toolchain or mount problem (the sentinel mount-proof passed first).
+      Closing this row for real needs a project export with its widget `.mpk`s present, which
+      this run did not have licensed access to obtain from this host. Not a regression: this
+      major has never produced an `.mda` in this crate.
+    check_command: >
+      NOT AVAILABLE on this major, structurally. The 7.23.8.58888 CDN toolchain ships
+      `mxbuild.exe` / `mxutil.exe` / `mxconvert.exe` - there is NO `mx` (or `mx.exe`) binary at
+      all (verified via `docker run --entrypoint /bin/bash <image> -c "find /opt/mxtools/modeler
+      -maxdepth 1 -iname 'mx*'"`, 2026-09-18). `build.sh check` will always exit 1 with
+      `ERROR: mx not found under /opt/mxtools` on this major - this is a property of the
+      Mendix 7 CDN tarball, not a bug in this crate. `check` first appears in the Mendix 9
+      toolchain. See docs/building-mendix-apps-in-docker.md#mx-check-is-not-available-on-every-major.
     notes: "Pairs with the mendix-7 runtime crate (same default version)."
 
 planned:

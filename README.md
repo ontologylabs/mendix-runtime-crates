@@ -70,18 +70,24 @@ multiple bind-mounts.
 ### Build crates — *compile* an `.mpr` → `.mda`
 
 Each version also ships a **build crate** under `crates/mendix-<N>/build/`: a
-version-pinned `mxbuild` + `mx` toolchain image that compiles a project and runs
-`mx check`, with nothing on the host but Docker (no Studio Pro). The toolchain is
-pulled from the same CDN as `mxbuild-<version>.tar.gz`. See
+version-pinned `mxbuild` (+ `mx`, on Mendix 9 and later) toolchain image that
+compiles a project, with nothing on the host but Docker (no Studio Pro). The
+toolchain is pulled from the same CDN as `mxbuild-<version>.tar.gz`. See
 **[Building MDAs in Docker](docs/building-mendix-apps-in-docker.md)**.
+
+⚠ **`mx check` does not exist on every major** — the CDN toolchain for Mendix 7 has no
+`mx` binary at all, and Mendix 8's `mx` has no `check` verb. `check` first works at
+Mendix 9. See
+[`mx check` is not available on every major](docs/building-mendix-apps-in-docker.md#mx-check-is-not-available-on-every-major).
+`build` (the `.mpr` → `.mda` compile) works identically on every major below.
 
 | Build crate | mxbuild version | JDK | Base image | Status |
 |---|---|---|---|---|
 | [`crates/mendix-11/build`](crates/mendix-11/build) | `11.6.4` | Java 21 | `eclipse-temurin:21-jdk-jammy` | image-verified¹ |
 | [`crates/mendix-10/build`](crates/mendix-10/build) | `10.24.13.86719` | Java 21 | `eclipse-temurin:21-jdk-jammy` | **MDA-verified²** (default patch: recipe, CDN 200) |
-| [`crates/mendix-9/build`](crates/mendix-9/build) | `9.24.20.33307` | Java 11 | `eclipse-temurin:11-jdk-jammy` | recipe (CDN 200) |
-| [`crates/mendix-8/build`](crates/mendix-8/build) | `8.18.35.97` | Java 11 | `eclipse-temurin:11-jdk-jammy` | recipe (CDN 200) |
-| [`crates/mendix-7/build`](crates/mendix-7/build) | `7.23.8.58888` | Java 8 | `eclipse-temurin:8-jdk-jammy` | recipe (CDN 200) |
+| [`crates/mendix-9/build`](crates/mendix-9/build) | `9.24.20.33307` | Java 11 | `eclipse-temurin:11-jdk-jammy` | recipe (CDN 200) — first `.mda` attempt made³, not yet closed |
+| [`crates/mendix-8/build`](crates/mendix-8/build) | `8.18.35.97` | Java 11 | `eclipse-temurin:11-jdk-jammy` | **MDA-verified⁴** |
+| [`crates/mendix-7/build`](crates/mendix-7/build) | `7.23.8.58888` | Java 8 | `eclipse-temurin:8-jdk-jammy` | recipe (CDN 200) — first `.mda` attempt made³, not yet closed |
 
 ¹ *image-verified* = the image builds, the CDN toolchain pull succeeds, and the
 binaries + entrypoint resolve and run; a full `.mpr → .mda` compile against a
@@ -94,6 +100,14 @@ for the measured timings and [Building MDAs in Docker](docs/building-mendix-apps
 for what it costs. The crate's default patch (`10.24.13.86719`) has not itself
 been build-tested — pin the newer patch with `--build-arg MENDIX_VERSION=10.24.22.113362`
 if you want the version that has actually been proven.
+³ *first `.mda` attempt made* = the image itself is proven (toolchain extracts, binaries
+resolve) and a real compile was run against it — but the project available for the attempt
+was missing its `theme`/`widgets` content locally, so mxbuild refused on missing-content
+errors rather than producing an `.mda`. Named honestly rather than left `pending` silently;
+see each crate's `versions.yaml` for the exact errors and what's needed to close it.
+⁴ *MDA-verified* = a real, full-content project (~2,960 files) compiled end to end
+(`BUILD SUCCEEDED`, a 140 MB / 3,569-entry `.mda`, 63s wall) — see
+[`crates/mendix-8/build/versions.yaml`](crates/mendix-8/build/versions.yaml).
 *recipe (CDN 200)* = authored to the same proven pattern with the CDN source
 URL verified reachable, image build pending.
 

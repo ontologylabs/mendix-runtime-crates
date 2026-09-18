@@ -1,5 +1,21 @@
 # Changelog — Mendix 9 Build Crate
 
+## [0.1.2] — 2026-09-18
+
+### Documented — `mx check` confirmed available; first live `image_smoke` attempt, not yet closed
+
+* **`check` is present on this major** — verified via `docker run --entrypoint
+  /opt/mxtools/modeler/mx <image> --help`: `check`, `convert`, `create-project`,
+  `update-widgets`, `collect-native-deps`, `show-version` are all listed. This is the first
+  major (7 → 9) where `check` actually exists in the CDN toolchain; see the mendix-7/mendix-8
+  changelogs for where it does not.
+* **First live `image_smoke` attempt, not yet closed.** The compile ran against a project whose
+  `theme/`, `resources/` and `javasource/` directories were all locally empty. mxbuild reported
+  a real verdict — 1,336+ cascading errors (its own display cap), a mix of missing pluggable
+  widgets and "Design property X is not supported by your theme" for every styled element with
+  no theme to check against — not a toolchain or mount defect (the bind-mount sentinel proof
+  passed first). See `versions.yaml` for the full account.
+
 ## [0.1.1] — 2026-09-17
 
 ### Fixed — `build.sh` refuses a MAJOR-version mismatch instead of silently compiling against
