@@ -24,7 +24,13 @@
 #   * Boot mechanism: m2ee admin protocol over HTTP (port 8090) — the same
 #     protocol Mendix Cloud uses internally.
 
-FROM --platform=linux/amd64 eclipse-temurin:21-jre-jammy
+# JAVA_MAJOR selects the Temurin base. Default 21. Mendix 11.16 creates projects that
+# compile to Java 25 (class file version 69); a Java 21 image then fails with
+# UnsupportedClassVersionError. Build those with --build-arg JAVA_MAJOR=25. A Java 25
+# image also runs Java 21 bytecode.
+ARG JAVA_MAJOR=21
+FROM --platform=linux/amd64 eclipse-temurin:${JAVA_MAJOR}-jre-jammy
+ARG JAVA_MAJOR
 
 ARG MENDIX_VERSION=11.6.4
 ARG RUNTIME_CDN_BASE=https://cdn.mendix.com/runtime
@@ -33,6 +39,7 @@ ARG USER_UID=1001
 LABEL ai.ayios.purpose="Mendix 11 runtime crate (model-agnostic)"
 LABEL ai.ayios.crate="mendix-11"
 LABEL ai.ayios.mendix-version="${MENDIX_VERSION}"
+LABEL ai.ayios.java-major="${JAVA_MAJOR}"
 LABEL maintainer="noreply@ontologylabs.ai"
 
 # Layer 1 — curl only. Stable across rebuilds. Lets the runtime tarball
