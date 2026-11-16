@@ -10,9 +10,9 @@ supported:
     java_version: 11
     verified_with:
       - native-mobile-9  # 9.24.20 upgrade fixture
-      - upgrade-app-9     # 9.24.20 upgrade fixture
+      - upgrade-app-9  # 9.24.20 upgrade fixture
     verified_at: "2026-06-18"
     notes: "Initial verification fixture. JDK 11 base — JDK 21 is incompatible with the MX9 bundled gradle."
 
 planned:
-  - mendix_version: "9.24.36.73625"  # FixtureApp V2 fixture
+  - mendix_version: "9.24.36.73625"  # V2 fixture

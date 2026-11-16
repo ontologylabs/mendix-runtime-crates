@@ -30,4 +30,4 @@ images:
       result: "HTTP 200 — runtime healthy"
       constants: "91 model-default constants auto-supplied from metadata.json"
       ddl: "9647 database synchronization commands completed (large production app)"
-    notes: "MX 10.24 LTS on Temurin 21. First boot of LargeApp's full schema under amd64 emulation is DDL-bound; smoke run with SMOKE_TIMEOUT=1200."
+    notes: "MX 10.24 LTS on Temurin 21. First boot of a large app's full schema under amd64 emulation is DDL-bound; smoke run with SMOKE_TIMEOUT=1200."

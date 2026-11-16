@@ -17,7 +17,7 @@
   could reproduce from a real MX7 project export. The refusal stands; what changed is that it
   is now exact rather than merely counted.
 * Confirmed, again, that this is the only MX7 checkout on the host (`find / -maxdepth 4 -iname
-  '*production-app-7*' -type d`) and that all five of its content directories (`widgets/`,
+  '*<app>*' -type d`) and that all five of its content directories (`widgets/`,
   `theme/`, `javasource/`, `resources/`, `userlib/`) are genuinely empty, not merely sparse.
 
 ## [0.1.2] — 2026-09-18
@@ -85,7 +85,7 @@ Initial release. The build (mxbuild + mx) companion to the mendix-7 runtime crat
   `--java-home` / `--java-exe-path` / `--gradle-home` / `--loose-version-check`
   and defaults `--output=/workspace/<App>.mda`. `mx check` exit codes normalised
   to the CI convention (0 clean / 1 errors / 2 warnings). Derived from the
-  production CI mxtools image entrypoint.
+  production mxtools entrypoint.
 * Pre-creates `$HOME/.local/share/Mendix` for the MX 7 `.NET` mxbuild whitelist
   FailFast (same fix as mxtools image).
 * Default Mendix version: 7.23.8.58888 (override via `--build-arg MENDIX_VERSION`).

@@ -9,8 +9,8 @@ supported:
     cdn_url: "https://cdn.mendix.com/runtime/mendix-11.6.4.tar.gz"
     java_version: 21
     verified_with:
-      - reference-app           # certification reference app
-      - fresh-app-main  # OntologyLabs fresh-app fixture
+      - reference-app-11   # certification reference app
+      - fresh-app-11       # fresh-app fixture
     verified_at: "2026-05-06"
     notes: "Initial verification fixture."
 

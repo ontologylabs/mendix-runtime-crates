@@ -33,7 +33,7 @@ trap 'echo "Tearing down..."; docker compose -f "${COMPOSE_FILE}" -p "${PROJECT_
 echo "=== Smoke test: bringing up postgres + mendix-runtime ==="
 docker compose -f "${COMPOSE_FILE}" -p "${PROJECT_NAME}" up -d
 
-# Large apps (e.g. LargeApp) under amd64 emulation need well over 180 s for
+# Large apps (e.g. a large production app) under amd64 emulation need well over 180 s for
 # first-boot DDL sync. Override with SMOKE_TIMEOUT=<seconds> if needed.
 SMOKE_TIMEOUT="${SMOKE_TIMEOUT:-420}"
 echo "=== Polling http://localhost:8080/ (timeout ${SMOKE_TIMEOUT} s) ==="

@@ -16,7 +16,7 @@
 * **Java 11 + the Mendix 9.24 runtime**, pulled from `cdn.mendix.com` at build time (never committed).
 * **Your model bind-mounted**, not baked — `docker compose restart` to reload, zero dangling images.
 * PostgreSQL-backed, driven through the **m2ee admin protocol** (the same mechanism Mendix Cloud uses).
-* Verified: this crate boots the native-mobile app **NativeMobileApp 9.24.20** to a healthy **HTTP 200**.
+* Verified: this crate boots a native-mobile **9.24.20** app to a healthy **HTTP 200**.
 
 ## The one rule that bites everyone: use JDK 11, not 21
 
@@ -52,7 +52,7 @@ volumes: { mendix-data: {} }
 
 ## Mendix-9-specific gotchas
 
-* **Model-default constants must be supplied.** On Mendix 9 the runtime does **not** auto-apply a constant's model default when the deployment config omits it — startup then fails with `Could not find value for constant '<Module.Const>'` during microflow-engine reload. The crate handles this automatically: `start.sh` reads the constants + defaults from your model's `metadata.json` and supplies them (NativeMobileApp boots with 10 of them, including a nested-JSON value). Override any with `MICROFLOW_CONSTANTS={"Module.Constant":"value"}`.
+* **Model-default constants must be supplied.** On Mendix 9 the runtime does **not** auto-apply a constant's model default when the deployment config omits it — startup then fails with `Could not find value for constant '<Module.Const>'` during microflow-engine reload. The crate handles this automatically: `start.sh` reads the constants + defaults from your model's `metadata.json` and supplies them (a native-mobile app boots with 10 of them, including a nested-JSON value). Override any with `MICROFLOW_CONSTANTS={"Module.Constant":"value"}`.
 * **`HttpHeaders`** logs a harmless `Unknown configuration setting` — leave `MXRUNTIME_HttpHeaders` empty.
 * **Native mobile apps** run fine: the crate serves the runtime + the bundled web/native assets; you point your Make-It-Native build at the URL.
 * The **m2ee boot path is identical** to Mendix 7/8/10/11, so the same `start.sh` drives it.

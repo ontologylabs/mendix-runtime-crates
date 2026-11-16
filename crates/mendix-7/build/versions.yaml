@@ -16,11 +16,11 @@ supported:
       and the missing-widget set is now named exactly rather than only counted. The image itself
       is proven (mxbuild.exe found and Mono-wrapped, toolchain extracts cleanly; the bind-mount
       sentinel proof passed before the compile ran, so this is not the wrong-namespace-mount
-      class). The only local MX7 checkout on this host (`ProductionApp7-trunk`) has its `.mpr`
+      class). The only local MX7 checkout on this host (`<app>-trunk`) has its `.mpr`
       genuinely present (44 MB, version-readable) but its `widgets/`, `theme/`, `javasource/`,
       `resources/` and `userlib/` directories are ALL empty (0 files each, confirmed by
       `find … -type f | wc -l` before attributing the failure) - this is the only MX7 checkout
-      anywhere on this host (verified: `find / -maxdepth 4 -iname '*production-app-7*' -type d`
+      anywhere on this host (verified: `find / -maxdepth 4 -iname '*<app>*' -type d`
       returns nothing else). `BUILD FAILED` with exactly 14 `Could not find widget '<Name>' in
       the 'widgets' directory` errors, 5 DISTINCT widget names, reproduced 2026-09-18 with the
       full mxbuild log captured (not eyeballed from a truncated tail):
@@ -32,7 +32,7 @@ supported:
         - 'Mobile Features' (1: Atlas_UI_Resources/MobileFeatures)
         - 'Barcode scanner' (1: Core/PhoneHome)
       A same-named-project sibling checkout on this host at Mendix 8
-      (`ProductionApp7-MDX8/widgets/`) carries `.mpk` packages whose `<name>` tags match THREE
+      (`<app>-mdx8/widgets/`) carries `.mpk` packages whose `<name>` tags match THREE
       of the five exactly - FileDocumentViewer.mpk ("File Document Viewer"), CustomString.mpk
       ("CustomString"), MobileFeatures.mpk ("Mobile Features") - plus a "Barcode scanner"-named
       package under a different filename (BarcodeScannerForPhoneGap.mpk). Deliberately NOT used:

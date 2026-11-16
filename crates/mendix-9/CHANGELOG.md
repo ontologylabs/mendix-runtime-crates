@@ -14,13 +14,13 @@ Initial release. Replicates the mendix-11 crate pattern for Mendix 9.x
 * `start.sh`: m2ee admin protocol entrypoint with DB-wait, DDL-sync retry,
   DEVELOPMENT_MODE bypass. **Auto-builds `MicroflowConstants` from the deployed
   model's `metadata.json` defaults** — the MX9 runtime does NOT auto-apply model
-  defaults when the field is absent (verified on NativeMobileApp: omitting it
+  defaults when the field is absent (verified on a native-mobile app: omitting it
   yields "Could not find value for constant 'MyModule.ApiKey'").
   Operator `MICROFLOW_CONSTANTS` env overrides.
 * Default Mendix version: 9.24.20.33307 (override via `--build-arg MENDIX_VERSION`).
 * Image size: ~846 MB. Image digest `sha256:c89844a0…` (see `provenance.yaml`).
 * Verified fixture (2026-06-18):
-  * **NativeMobileApp** (native mobile app, model RuntimeVersion 9.24.20.33307):
+  * **A native mobile app** ( model RuntimeVersion 9.24.20.33307):
     HTTP 200, runtime healthy. Booted with 10 model-default constants
     auto-supplied (incl. the nested-JSON `GPubSub.EnabledSubscriptions`).
 

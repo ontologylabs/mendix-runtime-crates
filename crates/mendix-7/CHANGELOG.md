@@ -20,7 +20,7 @@ Initial release. Replicates the mendix-11 crate pattern for Mendix 7.x
 * Image size: ~582 MB (smallest of the crate family — JDK 8 + MX7 runtime).
   Image digest `sha256:a5b4a6cb…` (see `provenance.yaml`).
 * Verified fixture (2026-06-18):
-  * **ProductionApp7** (model RuntimeVersion 7.23.8.58888): HTTP 200, runtime
+  * **A Mendix 7 production app** (model RuntimeVersion 7.23.8.58888): HTTP 200, runtime
     healthy. Model-default constants auto-supplied.
 
 ### Notes

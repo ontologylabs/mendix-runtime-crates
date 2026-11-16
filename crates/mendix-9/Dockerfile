@@ -22,7 +22,7 @@
 #     https://cdn.mendix.com/runtime/mendix-${MENDIX_VERSION}.tar.gz
 #   * Java: Eclipse Temurin 11 — Mendix 9.24 requires JDK 11. JDK 21 is
 #     incompatible (the 9.x bundled gradle 7.6.3 throws "Unsupported class
-#     file major version 65"; verified on UpgradeApp9 9.24.20).
+#     file major version 65"; verified on a 9.24.20 app).
 #   * Boot mechanism: m2ee admin protocol over HTTP (port 8090) — the same
 #     protocol Mendix Cloud uses internally.
 

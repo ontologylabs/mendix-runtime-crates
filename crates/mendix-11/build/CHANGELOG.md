@@ -48,7 +48,7 @@ Initial release. The build (mxbuild + mx) companion to the mendix-11 runtime cra
   `--java-home` / `--java-exe-path` / `--gradle-home` / `--loose-version-check`
   and defaults `--output=/workspace/<App>.mda`. `mx check` exit codes normalised
   to the CI convention (0 clean / 1 errors / 2 warnings). Derived from the
-  production CI mxtools image entrypoint.
+  production mxtools entrypoint.
 * Pre-creates `$HOME/.local/share/Mendix` for the MX 11 `.NET` mxbuild whitelist
   FailFast (same fix as mxtools image).
 * Default Mendix version: 11.6.4 (override via `--build-arg MENDIX_VERSION`).

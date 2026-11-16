@@ -11,7 +11,7 @@
 # Mount:  -v <project-dir>:/workspace   (the dir containing your App.mpr)
 # Output: build writes <App>.mda into /workspace next to the .mpr.
 #
-# Derived from the CI mxtools image entrypoint (production-proven mxbuild
+# Derived from the mxtools entrypoint (production-proven mxbuild
 # invocation) — same find-tool + auto-inject(--java-home/--gradle-home/
 # --loose-version-check) logic, retargeted at the baked /opt/mxtools/modeler.
 

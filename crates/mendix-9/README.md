@@ -65,11 +65,11 @@ during build.
 
 ```bash
 docker run -d \
-    --name native-mobile-9-runtime \
+    --name myapp-runtime \
     -p 8080:8080 \
     -p 8090:8090 \
     -v /path/to/unzipped/mda:/opt/mendix/app:ro \
-    -v native-mobile-9-data:/opt/mendix/data \
+    -v myapp-data:/opt/mendix/data \
     -e DATABASE_ENDPOINT="postgres://mendix:mendix@db:5432/mendix" \
     -e ADMIN_PASSWORD="strong-password-here" \
     -e DEVELOPMENT_MODE="true" \

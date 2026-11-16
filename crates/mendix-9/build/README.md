@@ -11,7 +11,7 @@ crate *produces* the `.mda`; the runtime crate *runs* it.
 
 ## Why this exists
 
-The CI pipeline compiles models with `mxbuild` driven from a bind-mounted Studio
+A typical CI pipeline compiles models with `mxbuild` driven from a bind-mounted Studio
 Pro install. That requires a licensed modeler on the host. This crate makes the
 toolchain self-contained and version-pinned: one image per Mendix major, the
 matching `mxbuild` fetched from `cdn.mendix.com` at `docker build` — so a CI runner
@@ -91,7 +91,7 @@ Pass any of these explicitly to override.
   the resulting `$HOME`.
 * **`.NET` whitelist (MX 11 origin).** mxbuild creates settings under
   `$HOME/.local/share/Mendix` and FailFast-rejects *creating* that path itself; the
-  image pre-creates it. (Same fix as the CI mxtools image image.)
+  image pre-creates it. (Same fix as the mxtools image.)
 * **amd64 emulation.** On Apple Silicon, `mxbuild` runs x86_64 under emulation.
   Enable Colima Rosetta (`colima start --vm-type vz --vz-rosetta`) for speed; a
   hung emulated build is the classic symptom of Rosetta being off.

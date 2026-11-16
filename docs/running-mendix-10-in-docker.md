@@ -16,7 +16,7 @@
 * **Java 21 + the Mendix 10.24 runtime**, pulled from `cdn.mendix.com` at build time (never committed). Mendix 10.24 LTS supports JDK 21; the base image is `eclipse-temurin:21-jre-jammy`.
 * **Your model bind-mounted**, not baked — `docker compose restart` to reload, zero dangling images.
 * PostgreSQL-backed, driven through the **m2ee admin protocol**.
-* Verified: this crate boots a **large production app — LargeProductionApp (10.24.13)** — to a healthy **HTTP 200**, with 91 model-default constants and 9,647 first-boot DDL commands.
+* Verified: this crate boots a **large production app (10.24.13)** — to a healthy **HTTP 200**, with 91 model-default constants and 9,647 first-boot DDL commands.
 
 ## Build & run
 
@@ -47,7 +47,7 @@ volumes: { mendix-data: {} }
 ## Mendix-10-specific notes
 
 * **`DEVELOPMENT_MODE=true`** is the easy path for local runs: it forces `DTAPMode=D`, relaxing the strict project-security checks (`CheckFormsAndMicroflows` / `CheckEverything`) that otherwise block a non-production deploy. Drop it for production-faithful runs.
-* **Large apps take a while on the *first* boot.** A real production model can run thousands of DDL commands to create its schema (LargeProductionApp: 9,647). On native hardware that's quick; under **amd64 emulation on Apple Silicon** it can take ~10 minutes. The bundled smoke test's poll timeout is configurable — `SMOKE_TIMEOUT=1200 ./tests/smoke-test.sh <mda>`. Subsequent boots reuse the schema and are fast.
+* **Large apps take a while on the *first* boot.** A real production model can run thousands of DDL commands to create its schema (one large app: 9,647). On native hardware that's quick; under **amd64 emulation on Apple Silicon** it can take ~10 minutes. The bundled smoke test's poll timeout is configurable — `SMOKE_TIMEOUT=1200 ./tests/smoke-test.sh <mda>`. Subsequent boots reuse the schema and are fast.
 * **Model-default constants are auto-supplied.** Like Mendix 9, the MX10 runtime doesn't auto-apply model defaults when the deployment config omits them; `start.sh` reads them from `metadata.json` and supplies them (override with `MICROFLOW_CONSTANTS`).
 * **`HttpHeaders`** logs a harmless `Unknown configuration setting` — leave `MXRUNTIME_HttpHeaders` empty.
 

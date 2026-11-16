@@ -16,9 +16,9 @@ Initial release.
   right one per deployed MDA's metadata.json.
 * Image size: ~785 MB (deduplicated layer storage)
 * Verified fixtures (2026-05-06):
-  * **ReferenceApp** (certification reference app): 24 s boot, HTTP 200,
+  * **A certification reference app**: 24 s boot, HTTP 200,
     REST API live with real data, Phase 3 schema preserved across container swap
-  * **FreshApp-main** (independent fresh v11.6.4 app): 15 s boot,
+  * **An independent fresh v11.6.4 app**: 15 s boot,
     HTTP 200, runtime started cleanly. Same crate image, different ProjectID,
     isolated postgres — confirms the crate is genuinely "any v11 app".
 * `build-server.sh` integration:
