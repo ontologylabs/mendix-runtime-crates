@@ -55,23 +55,45 @@ BAKED_VERSIONS=$(ls "${RUNTIMES_DIR}/" 2>/dev/null | sort -V)
 echo "Deployed model RuntimeVersion: ${DEPLOYED_VERSION}"
 echo "Crate baked versions:          $(echo "${BAKED_VERSIONS}" | tr '\n' ' ')"
 
-# Resolve the runtime path. Strict match first; then fall back to a same-major
-# match if the deployed patch isn't baked (Mendix runtime is patch-stable
-# within a major across small ranges).
+# Resolve the runtime path. EXACT match only, by default: an MDA is built for one
+# runtime version, and running it on another (even a later patch of the same
+# major) is a silent wrong runtime that /about will not reveal. The old
+# same-major fallback is still available, explicitly, with
+#   MX_RUNTIME_FALLBACK=same-major
+# which prints a WARNING naming both versions. (Observed: a 10.24.21 MDA ran on a 10.24.13
+# image and reported 10.24.13.)
 RUNTIME_DIR=""
+RESOLVED_VERSION=""
+if [ -z "${DEPLOYED_VERSION}" ] || [ "${DEPLOYED_VERSION}" = "unknown" ] || [ "${DEPLOYED_VERSION}" = "null" ]; then
+    echo "[FATAL] RuntimeVersion is missing or unreadable in ${APP_DIR}/model/metadata.json; refusing to guess a runtime."
+    exit 78
+fi
+# A version is digits and dots only: no path (a "/" or ".." would let the
+# exact-match test resolve to a different directory than the one named).
+if ! [[ "${DEPLOYED_VERSION}" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
+    echo "[FATAL] RuntimeVersion '${DEPLOYED_VERSION}' is not a version (digits and dots only); refusing."
+    exit 78
+fi
 if [ -d "${RUNTIMES_DIR}/${DEPLOYED_VERSION}/runtime" ]; then
     RUNTIME_DIR="${RUNTIMES_DIR}/${DEPLOYED_VERSION}/runtime"
     RESOLVED_VERSION="${DEPLOYED_VERSION}"
-else
+elif [ "${MX_RUNTIME_FALLBACK:-}" = "same-major" ]; then
+    # The NEAREST same-major runtime: the highest baked version not above the
+    # deployed one, else the lowest above it (sort -V order).
     DEPLOYED_MAJOR="${DEPLOYED_VERSION%%.*}"
+    below=""; above=""
     for v in ${BAKED_VERSIONS}; do
-        if [ "${v%%.*}" = "${DEPLOYED_MAJOR}" ]; then
-            RUNTIME_DIR="${RUNTIMES_DIR}/${v}/runtime"
-            RESOLVED_VERSION="${v}"
-            echo "[WARN] Exact runtime ${DEPLOYED_VERSION} not baked. Falling back to same-major ${v}."
-            break
-        fi
+        [ "${v%%.*}" = "${DEPLOYED_MAJOR}" ] || continue
+        [ -f "${RUNTIMES_DIR}/${v}/runtime/launcher/runtimelauncher.jar" ] || continue
+        if [ "$(printf '%s\n%s\n' "${v}" "${DEPLOYED_VERSION}" | sort -V | head -1)" = "${v}" ]; then below="${v}"
+        elif [ -z "${above}" ]; then above="${v}"; fi
     done
+    pick="${below:-${above}}"
+    if [ -n "${pick}" ]; then
+        RUNTIME_DIR="${RUNTIMES_DIR}/${pick}/runtime"
+        RESOLVED_VERSION="${pick}"
+        echo "[WARN] MX_RUNTIME_FALLBACK=same-major: the model was built for ${DEPLOYED_VERSION} but runs on ${pick}."
+    fi
 fi
 
 if [ -z "${RUNTIME_DIR}" ] || [ ! -f "${RUNTIME_DIR}/launcher/runtimelauncher.jar" ]; then
@@ -79,6 +101,11 @@ if [ -z "${RUNTIME_DIR}" ] || [ ! -f "${RUNTIME_DIR}/launcher/runtimelauncher.ja
     echo "        Baked versions: $(echo "${BAKED_VERSIONS}" | tr '\n' ' ')"
     echo "        Either rebuild the crate with --build-arg MENDIX_VERSION=${DEPLOYED_VERSION}"
     echo "        or bake additional versions into the crate image."
+    if [ -d "${RUNTIMES_DIR}/${DEPLOYED_VERSION}" ]; then
+        echo "        (${RUNTIMES_DIR}/${DEPLOYED_VERSION} exists but has no runtime/launcher/runtimelauncher.jar: the image is damaged.)"
+    else
+        echo "        (A different patch of the same major runs only with MX_RUNTIME_FALLBACK=same-major.)"
+    fi
     exit 78
 fi
 
