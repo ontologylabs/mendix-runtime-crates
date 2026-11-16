@@ -41,7 +41,8 @@ ARG MXBUILD_CDN_BASE=https://cdn.mendix.com/runtime
 LABEL ai.ayios.purpose="Mendix 7 build crate (mxbuild + mx, model-agnostic)"
 LABEL ai.ayios.crate="mendix-7/build"
 LABEL ai.ayios.mendix-version="${MENDIX_VERSION}"
-LABEL maintainer="hardy@agileworks.co.za"
+LABEL org.opencontainers.image.vendor="OntologyLabs"
+LABEL org.opencontainers.image.source="https://github.com/ontologylabs/mendix-runtime-crates"
 
 # Layer 1 — apt deps for the mxbuild toolchain. mxbuild is a .NET/Mono program:
 #   libgdiplus — System.Drawing (image/PDF generation during build)
