@@ -33,7 +33,8 @@ ARG USER_UID=1001
 LABEL ai.ayios.purpose="Mendix 10 runtime crate (model-agnostic)"
 LABEL ai.ayios.crate="mendix-10"
 LABEL ai.ayios.mendix-version="${MENDIX_VERSION}"
-LABEL maintainer="noreply@ontologylabs.ai"
+LABEL org.opencontainers.image.vendor="OntologyLabs"
+LABEL org.opencontainers.image.source="https://github.com/ontologylabs/mendix-runtime-crates"
 
 # Layer 1 — curl only. Stable across rebuilds. Lets the runtime tarball
 # download (~341 MB) sit in its own layer that doesn't invalidate when
