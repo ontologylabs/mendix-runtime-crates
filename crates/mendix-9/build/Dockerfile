@@ -18,8 +18,8 @@
 #               → `mx check` with CI-normalised exit codes (0 clean / 1 error / 2 warn).
 #
 # Why a "build crate" (companion to the runtime crate):
-#   The AIDE pipeline drives mxbuild via a bind-mounted Studio Pro modeler
-#   (the aide-mxtools image). This crate makes the toolchain self-contained and
+#   A typical CI pipeline drives mxbuild via a bind-mounted Studio Pro modeler
+#   (the mxtools image image). This crate makes the toolchain self-contained and
 #   version-pinned: one image per Mendix major, the matching mxbuild fetched
 #   from the CDN at build, so a contributor with only Docker can compile any app
 #   at that version without a local Studio Pro install. Runtime crate runs the
@@ -28,7 +28,7 @@
 # Provenance:
 #   * mxbuild + mx from https://cdn.mendix.com/runtime/mxbuild-${MENDIX_VERSION}.tar.gz
 #   * Tarball top-level is `modeler/` → modeler/mxbuild, modeler/mx,
-#     modeler/tools/gradle (verified against the AIDE build-server cache layout).
+#     modeler/tools/gradle (verified against the build server cache layout).
 #   * Java: Eclipse Temurin 11 JDK — Mendix 9 compiles Java actions at release 11.
 #     A full JDK (not JRE) is required: mxbuild invokes javac to compile the
 #     app's javasource and Java actions.
@@ -65,7 +65,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # MENDIX_VERSION or MXBUILD_CDN_BASE changes.
 #
 # Tarball top-level is `modeler/`, so extracting at /opt/mxtools produces the
-# same layout the AIDE build-server caches and mounts at /opt/mxtools:
+# same layout the build server caches and mounts at /opt/mxtools:
 #     /opt/mxtools/modeler/mxbuild
 #     /opt/mxtools/modeler/mx
 #     /opt/mxtools/modeler/tools/gradle
@@ -91,7 +91,7 @@ RUN set -eux; \
 # filesystem FailFast-rejects *creating* it ("UnauthorizedAccessException …
 # EnsurePathSafety") before the build starts. Pre-create it for HOME=/root so
 # mxbuild writes settings without tripping the create-time whitelist check (a
-# harmless no-op on older Mono-based mxbuild). Proven in AIDE aide-mxtools.
+# harmless no-op on older Mono-based mxbuild). Proven in mxtools.
 RUN mkdir -p /root/.local/share/Mendix /root/.config/Mendix /root/.cache/Mendix
 
 # Crate entrypoint.

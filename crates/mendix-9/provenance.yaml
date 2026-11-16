@@ -25,7 +25,7 @@ images:
     image_size_bytes: 846545450
     built_at: "2026-06-18"
     smoke_verified_with:
-      app: figwarehouse
+      app: native-mobile-9
       mda_runtime_version: "9.24.20.33307"
       result: "HTTP 200 — runtime healthy"
       constants: "10 model-default constants auto-supplied from metadata.json (incl. nested-JSON GPubSub.EnabledSubscriptions)"

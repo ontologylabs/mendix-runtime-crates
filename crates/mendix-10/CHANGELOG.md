@@ -16,7 +16,7 @@ Initial release. Replicates the mendix-11 crate pattern for Mendix 10.x
 * Default Mendix version: 10.24.13.86719 (override via `--build-arg MENDIX_VERSION`).
 * Image size: ~1.14 GB. Image digest `sha256:d5f96dcd…` (see `provenance.yaml`).
 * Verified fixture (2026-06-18):
-  * **AdviserMarketplace / EFG** (large production app, model RuntimeVersion
+  * **A large production app** ( model RuntimeVersion
     10.24.13.86719): HTTP 200, runtime healthy. Booted with **91** model-default
     constants auto-supplied and **9,647** DDL synchronization commands executed
     on first run. Run under amd64 emulation with `SMOKE_TIMEOUT=1200`.
@@ -25,7 +25,7 @@ Initial release. Replicates the mendix-11 crate pattern for Mendix 10.x
 * `HttpHeaders` config key logs "Unknown configuration setting" — harmless
   (no custom headers wired by default), same as MX9/11.
 * Smoke poll timeout is configurable via `SMOKE_TIMEOUT` (default 420 s). Large
-  production apps under amd64 emulation (e.g. EFG, ~10 min first-boot DDL)
+  production apps under amd64 emulation (e.g. a large production app, ~10 min first-boot DDL)
   exceed both the original hard-coded 180 s and the 420 s default — pass a
   larger value.
 

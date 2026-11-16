@@ -19,13 +19,13 @@ crate *produces* the `.mda`; the runtime crate *runs* it.
 
 ## Why this exists
 
-The AIDE pipeline compiles models with `mxbuild` driven from a bind-mounted Studio
+A typical CI pipeline compiles models with `mxbuild` driven from a bind-mounted Studio
 Pro install. That requires a licensed modeler on the host. This crate makes the
 toolchain self-contained and version-pinned: one image per Mendix major, the
 matching `mxbuild` fetched from `cdn.mendix.com` at `docker build` — so a CI runner
 or a contributor with only Docker can compile a Mendix 8 app without Studio Pro.
 
-| | Studio Pro on host | aide-mxtools (bind-mount) | This build crate |
+| | Studio Pro on host | mxtools image (bind-mount) | This build crate |
 |---|---|---|---|
 | Needs Studio Pro installed | yes | yes (modeler bind-mounted) | **no** |
 | Toolchain source | local install | local install | **CDN at build** |
@@ -99,7 +99,7 @@ Pass any of these explicitly to override.
   the resulting `$HOME`.
 * **`.NET` whitelist (MX 11 origin).** mxbuild creates settings under
   `$HOME/.local/share/Mendix` and FailFast-rejects *creating* that path itself; the
-  image pre-creates it. (Same fix as the AIDE aide-mxtools image.)
+  image pre-creates it. (Same fix as the mxtools image.)
 * **amd64 emulation.** On Apple Silicon, `mxbuild` runs x86_64 under emulation.
   Enable Colima Rosetta (`colima start --vm-type vz --vz-rosetta`) for speed; a
   hung emulated build is the classic symptom of Rosetta being off.

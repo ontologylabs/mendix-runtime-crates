@@ -48,9 +48,9 @@ Initial release. The build (mxbuild + mx) companion to the mendix-11 runtime cra
   `--java-home` / `--java-exe-path` / `--gradle-home` / `--loose-version-check`
   and defaults `--output=/workspace/<App>.mda`. `mx check` exit codes normalised
   to the CI convention (0 clean / 1 errors / 2 warnings). Derived from the
-  production AIDE aide-mxtools entrypoint.
+  production mxtools entrypoint.
 * Pre-creates `$HOME/.local/share/Mendix` for the MX 11 `.NET` mxbuild whitelist
-  FailFast (same fix as aide-mxtools).
+  FailFast (same fix as mxtools image).
 * Default Mendix version: 11.6.4 (override via `--build-arg MENDIX_VERSION`).
 
 ### Verification status (2026-06-23)
@@ -63,7 +63,7 @@ Initial release. The build (mxbuild + mx) companion to the mendix-11 runtime cra
 * **Full MDA compile smoke: pending** — a real `.mpr → .mda` build needs a
   licensed MX11 project; recorded honestly in `provenance.yaml`
   (`smoke_verified: pending`). The mxbuild invocation is the production-proven
-  aide-mxtools path.
+  mxtools image path.
 
 ### Why
 Lets a Docker-only environment (CI, a contributor without Studio Pro) compile and

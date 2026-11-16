@@ -4,7 +4,7 @@
 
 ### Verified — this crate's FIRST `.mda`-producing smoke on Mendix 9, at a newer patch
 
-* The Edubond V2 fixture (matching this crate's own runtime-crate `planned:` entry,
+* The V2 fixture (matching this crate's own runtime-crate `planned:` entry,
   `crates/mendix-9/versions.yaml`) at Mendix `9.24.36.73625` - a real, full-content project
   (javasource 1,677 files / theme 197 / widgets 52 / userlib 301) - compiled end to end:
   `BUILD SUCCEEDED`, a 180 MB / 4,020-entry `.mda`, 124s wall. Verified as a real zip archive
@@ -15,7 +15,7 @@
   beside this one, not over it: two different projects, two different verdicts, same crate.
 * **Found only by enumerating the checkout rather than globbing for "the" `.mpr`.** This project's
   own directory carries three `.mpr` files, two of them zero bytes (`App.mpr`, a
-  space-named `Edubond V2.mpr`). `find … -name '*.mpr' | head -1` picks a decoy and reads as an
+  space-named `App V2.mpr`). `find … -name '*.mpr' | head -1` picks a decoy and reads as an
   unusable, content-empty checkout — this is exactly what made this same checkout look empty on
   first inspection this pass, before it was enumerated by content rather than by name. Staged a
   clean copy that excludes both decoys before handing it to `scripts/ops/mxbuild-oracle.sh`, so
@@ -85,16 +85,16 @@ Initial release. The build (mxbuild + mx) companion to the mendix-9 runtime crat
   `--java-home` / `--java-exe-path` / `--gradle-home` / `--loose-version-check`
   and defaults `--output=/workspace/<App>.mda`. `mx check` exit codes normalised
   to the CI convention (0 clean / 1 errors / 2 warnings). Derived from the
-  production AIDE aide-mxtools entrypoint.
+  production mxtools entrypoint.
 * Pre-creates `$HOME/.local/share/Mendix` for the MX 9 `.NET` mxbuild whitelist
-  FailFast (same fix as aide-mxtools).
+  FailFast (same fix as mxtools image).
 * Default Mendix version: 9.24.20.33307 (override via `--build-arg MENDIX_VERSION`).
 
 ### Verification status
 * CDN source `mxbuild-9.24.20.33307.tar.gz`: **HTTP 200 verified (2026-06-23)**.
 * Image build + `mx version` / MDA smoke: **pending** — recorded honestly in
   `provenance.yaml` (`smoke_verified: pending`). The mxbuild invocation itself is
-  the production-proven aide-mxtools path; the remaining gate is a release build.
+  the production-proven mxtools image path; the remaining gate is a release build.
 
 ### Why
 Lets a Docker-only environment (CI, a contributor without Studio Pro) compile and

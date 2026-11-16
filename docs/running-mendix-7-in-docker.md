@@ -18,7 +18,7 @@ The **`mendix-7` runtime crate** solves this. It is a model-agnostic, version-pi
 * **Java 8 + the Mendix 7.23 runtime**, pulled from `cdn.mendix.com` at build time (never committed).
 * **Your model bind-mounted**, not baked — `docker compose restart` to reload, with zero dangling images.
 * A **PostgreSQL-backed** runtime driven entirely through the **m2ee admin protocol** — the same protocol Mendix Cloud and `m2ee-tools` use against production Mendix 7 servers.
-* Verified: this crate boots **MoneyWorksPortal 7.23.8** to a healthy **HTTP 200**.
+* Verified: this crate boots **a Mendix 7.23.8 production app** to a healthy **HTTP 200**.
 
 ## Prerequisites
 

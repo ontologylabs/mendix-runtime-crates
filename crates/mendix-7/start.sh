@@ -253,7 +253,7 @@ DTAP_MODE="${DTAPMode:-D}"
 # NOT send a MicroflowConstants update, so the runtime falls back to the
 # model's defaultValue for each constant. Sending an empty object {} in
 # update_configuration would clobber those defaults — verified empirically
-# (Claudius `FeedbackModule.LocalStorageKey` returned "Could not find
+# (a reference app's `FeedbackModule.LocalStorageKey` returned "Could not find
 # value for constant" with `MicroflowConstants:{}`).
 #
 # Resolution order:
@@ -262,8 +262,8 @@ DTAP_MODE="${DTAPMode:-D}"
 #   2. Otherwise, build the constants map from the deployed model's OWN default
 #      values (metadata.json Constants[].DefaultValue). The MX runtime does NOT
 #      auto-apply model defaults when MicroflowConstants is absent — that is the
-#      cf-buildpack's job. Verified on MX9 (FigWarehouse): omitting the field
-#      yields "Could not find value for constant 'MoneyworksDatabase.Devkey'"
+#      cf-buildpack's job. Verified on MX9 (a native-mobile app): omitting the field
+#      yields "Could not find value for constant 'MyModule.ApiKey'"
 #      even though the model declares a default. Building from metadata makes
 #      the crate self-sufficient (it boots any app whose constants have model
 #      defaults, with zero operator config). Values are the string forms Mendix

@@ -16,7 +16,7 @@
 * **Java 21 + the Mendix 11.x runtime**, pulled from `cdn.mendix.com` at build time (never committed). Base image `eclipse-temurin:21-jre-jammy`.
 * **Your model bind-mounted**, not baked — `docker compose restart` to reload, zero dangling images.
 * PostgreSQL-backed, driven through the **m2ee admin protocol**.
-* Verified: this crate boots both **Claudius** (a certification reference app) and **ExpenseWorks** (an independent fresh 11.6.4 app) to a healthy **HTTP 200** in ~15–25 s — the same image, different ProjectIDs, confirming it's genuinely "any v11 app".
+* Verified: this crate boots both **a certification reference app** and **an independent fresh 11.6.4 app** to a healthy **HTTP 200** in ~15–25 s — the same image, different ProjectIDs, confirming it's genuinely "any v11 app".
 
 ## Build & run
 

@@ -9,7 +9,7 @@ supported:
     cdn_url: "https://cdn.mendix.com/runtime/mendix-7.23.8.58888.tar.gz"
     java_version: 8
     verified_with:
-      - moneyworksportal  # 7.23.8 production fixture
+      - production-app-7  # 7.23.8 production fixture
     verified_at: "2026-06-18"
     notes: "Initial verification fixture. Oldest supported major (2017-era). JDK 8 base."
 

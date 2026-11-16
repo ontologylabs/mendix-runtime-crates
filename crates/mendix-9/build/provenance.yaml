@@ -24,7 +24,7 @@ images:
     cdn_verified: "2026-06-23 — HTTP 200 (HEAD)"
     smoke_verified: "pending"
     notes: >
-      Recipe authored from the production AIDE aide-mxtools image (proven mxbuild
+      Recipe authored from the production mxtools image (proven mxbuild
       invocation: --java-home / --java-exe-path / --gradle-home / --loose-version-check)
       and the verified runtime-crate recipe-pull pattern. The CDN source URL is
       verified reachable; an image build + `mx version`/MDA smoke is the remaining

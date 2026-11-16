@@ -9,7 +9,7 @@ supported:
     cdn_url: "https://cdn.mendix.com/runtime/mendix-10.24.13.86719.tar.gz"
     java_version: 21
     verified_with:
-      - adviser-marketplace  # EFG production app (10.24.13 LTS)
+      - large-production-app  # large production app (10.24.13 LTS)
     verified_at: "2026-06-18"
     notes: "Initial verification fixture. MX 10.24 LTS on Eclipse Temurin 21."
 

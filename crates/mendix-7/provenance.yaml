@@ -25,7 +25,7 @@ images:
     image_size_bytes: 582400829
     built_at: "2026-06-18"
     smoke_verified_with:
-      app: moneyworksportal
+      app: production-app-7
       mda_runtime_version: "7.23.8.58888"
       result: "HTTP 200 — runtime healthy"
       constants: "model-default constants auto-supplied from metadata.json"
