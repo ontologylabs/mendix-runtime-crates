@@ -248,23 +248,36 @@ JDBC="jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}"
 HTTP_HEADERS="${MXRUNTIME_HttpHeaders:-[]}"
 DTAP_MODE="${DTAPMode:-D}"
 
-# MICROFLOW_CONSTANTS — JSON object of {"Module.Constant": "value"} that
-# overrides defaults baked into the model. Empty (or unset) means we DO
-# NOT send a MicroflowConstants update, so the runtime falls back to the
-# model's defaultValue for each constant. Sending an empty object {} in
-# update_configuration would clobber those defaults — verified empirically
-# (Claudius `FeedbackModule.LocalStorageKey` returned "Could not find
-# value for constant" with `MicroflowConstants:{}`).
-CONSTANTS_OPTIONAL_FIELD=""
+# MICROFLOW_CONSTANTS — optional JSON object {"Module.Constant": "value"} from the
+# caller. The constants sent to the runtime are the deployed model's OWN defaults
+# (metadata.json Constants[].DefaultValue) MERGED with the caller's values; the
+# caller wins on a clash. The MX runtime does NOT auto-apply model defaults when
+# MicroflowConstants is absent (that is the cf-buildpack's job): an app with any
+# constant then fails at run time ("Could not find value for constant ...";
+# on Mendix 11 /xas/ get_session_data answers HTTP 560). Sending {} would clobber
+# the defaults too, so the field is omitted only when the merged map is empty.
+# (Verified on Mendix 9 and 10 apps and on a blank Mendix 11.6.4 app.)
+DEFAULTS_JSON="{}"
+if [ -f "${APP_DIR}/model/metadata.json" ]; then
+    DEFAULTS_JSON=$(jq -c '[.Constants[]? | select(.DefaultValue != null) | {(.Name): (.DefaultValue|tostring)}] | add // {}' \
+        "${APP_DIR}/model/metadata.json" 2>/dev/null || echo "{}")
+fi
+CALLER_JSON="{}"
 if [ -n "${MICROFLOW_CONSTANTS:-}" ] && [ "${MICROFLOW_CONSTANTS}" != "{}" ]; then
-    # Validate JSON shape before sending — bad JSON would fail
-    # update_configuration silently and produce confusing downstream errors.
-    if echo "${MICROFLOW_CONSTANTS}" | jq -e . >/dev/null 2>&1; then
-        CONSTANTS_OPTIONAL_FIELD=",\"MicroflowConstants\":${MICROFLOW_CONSTANTS}"
-        echo "Applying ${MICROFLOW_CONSTANTS_KEY_COUNT:-N} constant overrides via MICROFLOW_CONSTANTS env."
+    if echo "${MICROFLOW_CONSTANTS}" | jq -e 'type == "object"' >/dev/null 2>&1; then
+        CALLER_JSON=$(echo "${MICROFLOW_CONSTANTS}" | jq -c .)
     else
-        echo "[WARN] MICROFLOW_CONSTANTS is set but not valid JSON. Falling back to model defaults."
+        echo "[WARN] MICROFLOW_CONSTANTS is set but not a JSON object; using the model defaults only."
     fi
+fi
+CONSTANTS_JSON=$(jq -c -n --argjson d "${DEFAULTS_JSON}" --argjson c "${CALLER_JSON}" '$d + $c' 2>/dev/null || echo "{}")
+NDEF=$(echo "${DEFAULTS_JSON}" | jq 'length' 2>/dev/null || echo 0)
+NCALL=$(echo "${CALLER_JSON}" | jq 'length' 2>/dev/null || echo 0)
+NCONST=$(echo "${CONSTANTS_JSON}" | jq 'length' 2>/dev/null || echo 0)
+echo "MicroflowConstants: ${NCONST} value(s) = ${NDEF} model default(s) merged with ${NCALL} caller value(s) (caller wins)."
+CONSTANTS_OPTIONAL_FIELD=""
+if [ "${NCONST:-0}" -gt 0 ]; then
+    CONSTANTS_OPTIONAL_FIELD=",\"MicroflowConstants\":${CONSTANTS_JSON}"
 fi
 
 # Optional development-mode bypass — set DEVELOPMENT_MODE=true to relax
