@@ -61,7 +61,7 @@ multiple bind-mounts.
 
 | Crate | Verified Mendix version | JRE | Base image | Status |
 |---|---|---|---|---|
-| [`crates/mendix-11`](crates/mendix-11) | `11.6.4` | Java 21 | `eclipse-temurin:21-jre-jammy` | verified |
+| [`crates/mendix-11`](crates/mendix-11) | `11.6.4` | Java 21 (25 for 11.16+: `--build-arg JAVA_MAJOR=25`) | `eclipse-temurin:${JAVA_MAJOR}-jre-jammy` | verified |
 | [`crates/mendix-10`](crates/mendix-10) | `10.24.13.86719` (LTS) | Java 21 | `eclipse-temurin:21-jre-jammy` | verified |
 | [`crates/mendix-9`](crates/mendix-9) | `9.24.20.33307` | Java 11 | `eclipse-temurin:11-jre-jammy` | verified |
 | [`crates/mendix-8`](crates/mendix-8) | `8.18.35.97` (final LTS) | Java 11 | `eclipse-temurin:11-jre-jammy` | recipe (CDN 200) |
@@ -83,7 +83,7 @@ Mendix 9. See
 
 | Build crate | mxbuild version | JDK | Base image | Status |
 |---|---|---|---|---|
-| [`crates/mendix-11/build`](crates/mendix-11/build) | `11.6.4` | Java 21 | `eclipse-temurin:21-jdk-jammy` | image-verified¹ |
+| [`crates/mendix-11/build`](crates/mendix-11/build) | `11.6.4` | Java 21 (25 for 11.16+: `--build-arg JAVA_MAJOR=25`) | `eclipse-temurin:${JAVA_MAJOR}-jdk-jammy` | image-verified¹ |
 | [`crates/mendix-10/build`](crates/mendix-10/build) | `10.24.13.86719` | Java 21 | `eclipse-temurin:21-jdk-jammy` | **MDA-verified²** (default patch: recipe, CDN 200) |
 | [`crates/mendix-9/build`](crates/mendix-9/build) | `9.24.20.33307` | Java 11 | `eclipse-temurin:11-jdk-jammy` | **MDA-verified⁵** (default patch: recipe, CDN 200) |
 | [`crates/mendix-8/build`](crates/mendix-8/build) | `8.18.35.97` | Java 11 | `eclipse-temurin:11-jdk-jammy` | **MDA-verified⁴** |
