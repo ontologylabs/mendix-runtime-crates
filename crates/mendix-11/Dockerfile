@@ -40,7 +40,7 @@ LABEL ai.ayios.purpose="Mendix 11 runtime crate (model-agnostic)"
 LABEL ai.ayios.crate="mendix-11"
 LABEL ai.ayios.mendix-version="${MENDIX_VERSION}"
 LABEL ai.ayios.java-major="${JAVA_MAJOR}"
-LABEL maintainer="hardy@agileworks.co.za"
+LABEL maintainer="OntologyLabs mendix-runtime-crates <https://github.com/ontologylabs/mendix-runtime-crates>"
 
 # Layer 1 — curl only. Stable across rebuilds. Lets the runtime tarball
 # download (~341 MB) sit in its own layer that doesn't invalidate when
