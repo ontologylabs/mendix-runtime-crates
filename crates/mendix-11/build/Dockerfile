@@ -33,7 +33,13 @@
 #     A full JDK (not JRE) is required: mxbuild invokes javac to compile the
 #     app's javasource and Java actions.
 
-FROM --platform=linux/amd64 eclipse-temurin:21-jdk-jammy
+# JAVA_MAJOR selects the Temurin base. Default 21. Mendix 11.16 creates projects that
+# compile to Java 25 (class file version 69); a Java 21 image then fails with
+# UnsupportedClassVersionError. Build those with --build-arg JAVA_MAJOR=25. A Java 25
+# image also runs Java 21 bytecode.
+ARG JAVA_MAJOR=21
+FROM --platform=linux/amd64 eclipse-temurin:${JAVA_MAJOR}-jdk-jammy
+ARG JAVA_MAJOR
 
 ARG MENDIX_VERSION=11.6.4
 ARG MXBUILD_CDN_BASE=https://cdn.mendix.com/runtime
@@ -41,6 +47,7 @@ ARG MXBUILD_CDN_BASE=https://cdn.mendix.com/runtime
 LABEL ai.ayios.purpose="Mendix 11 build crate (mxbuild + mx, model-agnostic)"
 LABEL ai.ayios.crate="mendix-11/build"
 LABEL ai.ayios.mendix-version="${MENDIX_VERSION}"
+LABEL ai.ayios.java-major="${JAVA_MAJOR}"
 LABEL maintainer="hardy@agileworks.co.za"
 
 # Layer 1 — apt deps for the mxbuild toolchain. mxbuild is a .NET/Mono program:
