@@ -48,7 +48,7 @@ LABEL ai.ayios.purpose="Mendix 11 build crate (mxbuild + mx, model-agnostic)"
 LABEL ai.ayios.crate="mendix-11/build"
 LABEL ai.ayios.mendix-version="${MENDIX_VERSION}"
 LABEL ai.ayios.java-major="${JAVA_MAJOR}"
-LABEL maintainer="noreply@ontologylabs.ai"
+LABEL maintainer="OntologyLabs mendix-runtime-crates <https://github.com/ontologylabs/mendix-runtime-crates>"
 
 # Layer 1 — apt deps for the mxbuild toolchain. mxbuild is a .NET/Mono program:
 #   libgdiplus — System.Drawing (image/PDF generation during build)
