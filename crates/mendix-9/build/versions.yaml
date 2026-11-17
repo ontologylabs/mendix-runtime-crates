@@ -30,6 +30,10 @@ supported:
       a full project this pass - it needs the same complete project content `build` does and
       would fail the same way against this run's incomplete checkout.
     notes: "Pairs with the mendix-9 runtime crate (same default version)."
+    tarball_sha256: "a4b32510923861180d429312ea83bdc1c24ba1d740ec1debc47cd285cc50ba4c"
+    tarball_sha256_source: "Mendix publishes no .sha256 for this tarball (HTTP 404); two independent fetches from two hosts agree"
+    verified_2026_11_17: >
+      VERIFIED 2026-11-17 on one Linux x86_64 host, images built from this repo at 2c8e8c72: build/tests/smoke-test.sh PASS - blank-app-9 (a blank project made by this version's own `mx create-project`, no app content) compiled to an .mda (12M) whose model/metadata.json RuntimeVersion is 9.24.20.33307. The runtime leg of the same run: tests/smoke-test.sh PASS - that .mda served by this crate's runtime image with postgres (docker-compose.smoke.yml, MENDIX_VERSION=9.24.20.33307), HTTP 200 at :8080.
 
   - mendix_version: "9.24.36.73625"
     cdn_url: "https://cdn.mendix.com/runtime/mxbuild-9.24.36.73625.tar.gz"
@@ -59,6 +63,21 @@ supported:
     notes: >
       Newer than the crate default (9.24.20.33307); both are supported. Nothing in the recipe is
       version-specific beyond MENDIX_VERSION - this row required no Dockerfile change.
+    tarball_sha256: "d23b49270408c9045edd41b3c98fca6f12e04df921cb24b01bf7e10164e158e6"
+    tarball_sha256_source: "Mendix-published .sha256 (cdn.mendix.com/runtime/<tarball>.sha256)"
+    verified_2026_11_17: >
+      VERIFIED 2026-11-17 on one Linux x86_64 host, images built from this repo at 2c8e8c72: build/tests/smoke-test.sh PASS - blank-app-9 (a blank project made by this version's own `mx create-project`, no app content) compiled to an .mda (12M) whose model/metadata.json RuntimeVersion is 9.24.36.73625. The runtime leg of the same run: tests/smoke-test.sh PASS - that .mda served by this crate's runtime image with postgres (docker-compose.smoke.yml, MENDIX_VERSION=9.24.36.73625), HTTP 200 at :8080.
+
+  - mendix_version: "9.24.41.90173"
+    cdn_url: "https://cdn.mendix.com/runtime/mxbuild-9.24.41.90173.tar.gz"
+    tarball_sha256: "b7945ef04dc0dc9cac5829263ba280b8d7182edbd154f3860c155a13df45439f"
+    tarball_sha256_source: "Mendix-published .sha256 (cdn.mendix.com/runtime/<tarball>.sha256)"
+    java_version: 11
+    cdn_status: "200 (verified 2026-11-17)"
+    verified_at: "2026-11-17"
+    verified_2026_11_17: >
+      VERIFIED 2026-11-17 on one Linux x86_64 host, images built from this repo at 2c8e8c72: build/tests/smoke-test.sh PASS - blank-app-9 (a blank project made by this version's own `mx create-project`, no app content) compiled to an .mda (12M) whose model/metadata.json RuntimeVersion is 9.24.41.90173. The runtime leg of the same run: tests/smoke-test.sh PASS - that .mda served by this crate's runtime image with postgres (docker-compose.smoke.yml, MENDIX_VERSION=9.24.41.90173), HTTP 200 at :8080.
+    notes: "Nothing in the recipe is version-specific beyond MENDIX_VERSION; this row required no Dockerfile change."
 
 planned:
   - mendix_version: "9.24.0"

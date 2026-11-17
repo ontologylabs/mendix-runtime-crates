@@ -27,6 +27,21 @@ supported:
       first appears in the Mendix 9 `mx` toolchain. See
       docs/building-mendix-apps-in-docker.md#mx-check-is-not-available-on-every-major.
     notes: "Pairs with the mendix-8 runtime crate (same default version)."
+    tarball_sha256: "a788bb7da0c48cd7f62dbe8e0c620fee9acc5ca040e63935b3bf8780e32a21b9"
+    tarball_sha256_source: "Mendix publishes no .sha256 for this tarball (HTTP 404); two independent fetches from two hosts agree"
+    verified_2026_11_17: >
+      VERIFIED 2026-11-17 on one Linux x86_64 host, images built from this repo at 2c8e8c72: build/tests/smoke-test.sh PASS - production-app-8 (a real full-content project of this exact Mendix version, used because this major's mx cannot create one; the project is not in this repo and not ours to publish, only this measurement is) compiled to an .mda (134M) whose model/metadata.json RuntimeVersion is 8.18.35.97. The runtime leg of the same run: tests/smoke-test.sh PASS - that .mda served by this crate's runtime image with postgres (docker-compose.smoke.yml, MENDIX_VERSION=8.18.35.97), HTTP 200 at :8080.
+
+  - mendix_version: "8.18.27.17745"
+    cdn_url: "https://cdn.mendix.com/runtime/mxbuild-8.18.27.17745.tar.gz"
+    tarball_sha256: "5e531b8541b04a8447f978b071b838101118f4c8bd2b2061506b930cd12cd62b"
+    tarball_sha256_source: "Mendix publishes no .sha256 for this tarball (HTTP 404); two independent fetches from two hosts agree"
+    java_version: 8
+    cdn_status: "200 (verified 2026-11-17)"
+    verified_at: "2026-11-17"
+    verified_2026_11_17: >
+      VERIFIED 2026-11-17 on one Linux x86_64 host, images built from this repo at 2c8e8c72: build/tests/smoke-test.sh PASS - production-app-8b (a real full-content project of this exact Mendix version, used because this major's mx cannot create one; the project is not in this repo and not ours to publish, only this measurement is) compiled to an .mda (104M) whose model/metadata.json RuntimeVersion is 8.18.27.17745. The runtime leg of the same run: tests/smoke-test.sh PASS - that .mda served by this crate's runtime image with postgres (docker-compose.smoke.yml, MENDIX_VERSION=8.18.27.17745), HTTP 200 at :8080.
+    notes: "Nothing in the recipe is version-specific beyond MENDIX_VERSION; this row required no Dockerfile change."
 
 planned:
   - mendix_version: "8.18.21.4259"  # portal-only (not on CDN); see ../PORTAL-DOWNLOAD.md

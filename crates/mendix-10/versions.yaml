@@ -12,6 +12,46 @@ supported:
       - large-production-app  # large production app (10.24.13 LTS)
     verified_at: "2026-06-18"
     notes: "Initial verification fixture. MX 10.24 LTS on Eclipse Temurin 21."
+    tarball_sha256: "9f6a5208955b50ab1ba0ba2e346bc7155acd9e29aabc817fe74b0236cfa08ab8"
+    tarball_sha256_source: "Mendix-published .sha256 (cdn.mendix.com/runtime/<tarball>.sha256)"
+    verified_2026_11_17: >
+      VERIFIED 2026-11-17 on one Linux x86_64 host, images built from this repo at 2c8e8c72: build/tests/smoke-test.sh PASS - blank-app-10 (a blank project made by this version's own `mx create-project`, no app content) compiled to an .mda (9.5M) whose model/metadata.json RuntimeVersion is 10.24.13.86719; tests/smoke-test.sh PASS - that .mda served by this crate's runtime image with postgres (docker-compose.smoke.yml, MENDIX_VERSION=10.24.13.86719), HTTP 200 at :8080.
+
+  - mendix_version: "10.24.2.75382"
+    cdn_url: "https://cdn.mendix.com/runtime/mendix-10.24.2.75382.tar.gz"
+    tarball_sha256: "ae9b455d3e329047878ba6fa877fc17786f6788b6c5653dbcf1ca29d70fd3ab5"
+    tarball_sha256_source: "Mendix-published .sha256 (cdn.mendix.com/runtime/<tarball>.sha256)"
+    java_version: 21
+    verified_with:
+      - blank-app-10  # blank project from this version's own mx create-project
+    verified_at: "2026-11-17"
+    verified_2026_11_17: >
+      VERIFIED 2026-11-17 on one Linux x86_64 host, images built from this repo at 2c8e8c72: build/tests/smoke-test.sh PASS - blank-app-10 (a blank project made by this version's own `mx create-project`, no app content) compiled to an .mda (9.5M) whose model/metadata.json RuntimeVersion is 10.24.2.75382; tests/smoke-test.sh PASS - that .mda served by this crate's runtime image with postgres (docker-compose.smoke.yml, MENDIX_VERSION=10.24.2.75382), HTTP 200 at :8080.
+    notes: "Nothing in the recipe is version-specific beyond MENDIX_VERSION; this row required no Dockerfile change."
+
+  - mendix_version: "10.24.21.108016"
+    cdn_url: "https://cdn.mendix.com/runtime/mendix-10.24.21.108016.tar.gz"
+    tarball_sha256: "3fb8a8d4d6ba214f0d2cf1265006008fa251dc4a17f8181cfe326abbb4915426"
+    tarball_sha256_source: "Mendix-published .sha256 (cdn.mendix.com/runtime/<tarball>.sha256)"
+    java_version: 21
+    verified_with:
+      - blank-app-10  # blank project from this version's own mx create-project
+    verified_at: "2026-11-17"
+    verified_2026_11_17: >
+      VERIFIED 2026-11-17 on one Linux x86_64 host, images built from this repo at 2c8e8c72: build/tests/smoke-test.sh PASS - blank-app-10 (a blank project made by this version's own `mx create-project`, no app content) compiled to an .mda (9.6M) whose model/metadata.json RuntimeVersion is 10.24.21.108016; tests/smoke-test.sh PASS - that .mda served by this crate's runtime image with postgres (docker-compose.smoke.yml, MENDIX_VERSION=10.24.21.108016), HTTP 200 at :8080.
+    notes: "Nothing in the recipe is version-specific beyond MENDIX_VERSION; this row required no Dockerfile change."
+
+  - mendix_version: "10.24.15.93102"
+    cdn_url: "https://cdn.mendix.com/runtime/mendix-10.24.15.93102.tar.gz"
+    tarball_sha256: "3b59db3638f4ed6bcdd138ba1b9126baa8c2ff33afcf6b2bd5a52e4f6fbc999d"
+    tarball_sha256_source: "Mendix-published .sha256 (cdn.mendix.com/runtime/<tarball>.sha256)"
+    java_version: 21
+    verified_with:
+      - blank-app-10  # blank project from this version's own mx create-project
+    verified_at: "2026-11-17"
+    verified_2026_11_17: >
+      VERIFIED 2026-11-17 on one Linux x86_64 host, images built from this repo at 2c8e8c72: build/tests/smoke-test.sh PASS - blank-app-10 (a blank project made by this version's own `mx create-project`, no app content) compiled to an .mda (9.5M) whose model/metadata.json RuntimeVersion is 10.24.15.93102; tests/smoke-test.sh PASS - that .mda served by this crate's runtime image with postgres (docker-compose.smoke.yml, MENDIX_VERSION=10.24.15.93102), HTTP 200 at :8080.
+    notes: "Nothing in the recipe is version-specific beyond MENDIX_VERSION; this row required no Dockerfile change."
 
 planned:
   - mendix_version: "10.18.0"
