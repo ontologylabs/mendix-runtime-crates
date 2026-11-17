@@ -14,6 +14,10 @@ supported:
     image_build: "verified 2026-06-23 — builds clean, binaries resolve, entrypoint runs (650 MB, amd64)"
     image_smoke: "pending — full .mpr → .mda compile needs a licensed MX11 project"
     notes: "Pairs with the mendix-11 runtime crate (same default version). Reference crate for 7/8/9/10 build crates."
+    tarball_sha256: "fcdce30ef879c79ae3a75dbd2d5834ed4d8972a94292386b19ed60356cd56d8f"
+    tarball_sha256_source: "Mendix-published .sha256 (cdn.mendix.com/runtime/<tarball>.sha256)"
+    verified_2026_11_17: >
+      VERIFIED 2026-11-17 on one Linux x86_64 host, images built from this repo at 2c8e8c72: build/tests/smoke-test.sh PASS - blank-app-11 (a blank project made by this version's own `mx create-project`, no app content) compiled to an .mda (12M) whose model/metadata.json RuntimeVersion is 11.6.4. The runtime leg of the same run: tests/smoke-test.sh PASS - that .mda served by this crate's runtime image with postgres (docker-compose.smoke.yml, MENDIX_VERSION=11.6.4), HTTP 200 at :8080.
   - mendix_version: "11.12.1"
     cdn_url: "https://cdn.mendix.com/runtime/mxbuild-11.12.1.tar.gz"
     java_version: 21          # JDK (mxbuild compiles javasource at release 21)
@@ -34,6 +38,54 @@ supported:
       the code CE0456 is not publicly documented anywhere we could find. The toolchain itself is
       proven to discriminate - injecting a type-invalid Decimal default produced exactly the one
       expected extra error and nothing else.
+    tarball_sha256: "17a2039e26d5052d916d0096ef9749bcd9662c4a840f76339eda9b39d3344f16"
+    tarball_sha256_source: "Mendix-published .sha256 (cdn.mendix.com/runtime/<tarball>.sha256)"
+    verified_2026_11_17: >
+      VERIFIED 2026-11-17 on one Linux x86_64 host, images built from this repo at 2c8e8c72: build/tests/smoke-test.sh PASS - blank-app-11 (a blank project made by this version's own `mx create-project`, no app content) compiled to an .mda (12M) whose model/metadata.json RuntimeVersion is 11.12.1. The runtime leg of the same run: tests/smoke-test.sh PASS - that .mda served by this crate's runtime image with postgres (docker-compose.smoke.yml, MENDIX_VERSION=11.12.1), HTTP 200 at :8080.
+
+  - mendix_version: "11.16.0"
+    cdn_url: "https://cdn.mendix.com/runtime/mxbuild-11.16.0.tar.gz"
+    tarball_sha256: "20ee12085cd179061508bbb8a0348f3b7cb4a4029c130e6186986f2c3a77a729"
+    tarball_sha256_source: "Mendix-published .sha256 (cdn.mendix.com/runtime/<tarball>.sha256)"
+    java_version: 25  # build with --build-arg JAVA_MAJOR=25 (Mendix 11.16 needs Java 25: class file version 69)
+    cdn_status: "200 (verified 2026-11-17)"
+    verified_at: "2026-11-17"
+    verified_2026_11_17: >
+      VERIFIED 2026-11-17 on one Linux x86_64 host, images built from this repo at 2c8e8c72: build/tests/smoke-test.sh PASS - blank-app-11 (a blank project made by this version's own `mx create-project`, no app content) compiled to an .mda (12M) whose model/metadata.json RuntimeVersion is 11.16.0. The runtime leg of the same run: tests/smoke-test.sh PASS - that .mda served by this crate's runtime image with postgres (docker-compose.smoke.yml, MENDIX_VERSION=11.16.0), HTTP 200 at :8080.
+    notes: "Nothing in the recipe is version-specific beyond MENDIX_VERSION and JAVA_MAJOR; this row required no Dockerfile change."
+
+  - mendix_version: "11.16.1"
+    cdn_url: "https://cdn.mendix.com/runtime/mxbuild-11.16.1.tar.gz"
+    tarball_sha256: "1d591c0a0b46f4dbe93aedd8b9737144a112a4d2cec881211fac931836590fa5"
+    tarball_sha256_source: "Mendix-published .sha256 (cdn.mendix.com/runtime/<tarball>.sha256)"
+    java_version: 25  # build with --build-arg JAVA_MAJOR=25 (Mendix 11.16 needs Java 25: class file version 69)
+    cdn_status: "200 (verified 2026-11-17)"
+    verified_at: "2026-11-17"
+    verified_2026_11_17: >
+      VERIFIED 2026-11-17 on one Linux x86_64 host, images built from this repo at 2c8e8c72: build/tests/smoke-test.sh PASS - blank-app-11 (a blank project made by this version's own `mx create-project`, no app content) compiled to an .mda (12M) whose model/metadata.json RuntimeVersion is 11.16.1. The runtime leg of the same run: tests/smoke-test.sh PASS - that .mda served by this crate's runtime image with postgres (docker-compose.smoke.yml, MENDIX_VERSION=11.16.1), HTTP 200 at :8080.
+    notes: "Nothing in the recipe is version-specific beyond MENDIX_VERSION and JAVA_MAJOR; this row required no Dockerfile change."
+
+  - mendix_version: "11.12.0"
+    cdn_url: "https://cdn.mendix.com/runtime/mxbuild-11.12.0.tar.gz"
+    tarball_sha256: "d230aeed35fdf3fa3f87ba3a0ded7a835f61c338b546895848924d9fd15a2cda"
+    tarball_sha256_source: "Mendix-published .sha256 (cdn.mendix.com/runtime/<tarball>.sha256)"
+    java_version: 21
+    cdn_status: "200 (verified 2026-11-17)"
+    verified_at: "2026-11-17"
+    verified_2026_11_17: >
+      VERIFIED 2026-11-17 on one Linux x86_64 host, images built from this repo at 2c8e8c72: build/tests/smoke-test.sh PASS - blank-app-11 (a blank project made by this version's own `mx create-project`, no app content) compiled to an .mda (12M) whose model/metadata.json RuntimeVersion is 11.12.0. The runtime leg of the same run: tests/smoke-test.sh PASS - that .mda served by this crate's runtime image with postgres (docker-compose.smoke.yml, MENDIX_VERSION=11.12.0), HTTP 200 at :8080.
+    notes: "Nothing in the recipe is version-specific beyond MENDIX_VERSION; this row required no Dockerfile change."
+
+  - mendix_version: "11.10.0"
+    cdn_url: "https://cdn.mendix.com/runtime/mxbuild-11.10.0.tar.gz"
+    tarball_sha256: "474296712207462eb30cd4cb9e1b24dff2e4c0a7769e94dfacc09b5d2ddebb59"
+    tarball_sha256_source: "Mendix-published .sha256 (cdn.mendix.com/runtime/<tarball>.sha256)"
+    java_version: 21
+    cdn_status: "200 (verified 2026-11-17)"
+    verified_at: "2026-11-17"
+    verified_2026_11_17: >
+      VERIFIED 2026-11-17 on one Linux x86_64 host, images built from this repo at 2c8e8c72: build/tests/smoke-test.sh PASS - blank-app-11 (a blank project made by this version's own `mx create-project`, no app content) compiled to an .mda (12M) whose model/metadata.json RuntimeVersion is 11.10.0. The runtime leg of the same run: tests/smoke-test.sh PASS - that .mda served by this crate's runtime image with postgres (docker-compose.smoke.yml, MENDIX_VERSION=11.10.0), HTTP 200 at :8080.
+    notes: "Nothing in the recipe is version-specific beyond MENDIX_VERSION; this row required no Dockerfile change."
 
 planned:
   - mendix_version: "11.0.0"

@@ -12,5 +12,9 @@ supported:
       - production-app-7  # 7.23.8 production fixture
     verified_at: "2026-06-18"
     notes: "Initial verification fixture. Oldest supported major (2017-era). JDK 8 base."
+    tarball_sha256: "81278760eafa5ab565ff8f0a868daf67438bf4055498cc75eae420c7864b17c2"
+    tarball_sha256_source: "Mendix publishes no .sha256 for this tarball (HTTP 404); two independent fetches from two hosts agree"
+    verified_2026_11_17: >
+      VERIFIED 2026-11-17 on one Linux x86_64 host, images built from this repo at 2c8e8c72: build/tests/smoke-test.sh PASS - production-app-7 (a real full-content project of this exact Mendix version, used because this major's mx cannot create one; the project is not in this repo and not ours to publish, only this measurement is) compiled to an .mda (83M) whose model/metadata.json RuntimeVersion is 7.23.8.58888; tests/smoke-test.sh PASS - that .mda served by this crate's runtime image with postgres (docker-compose.smoke.yml, MENDIX_VERSION=7.23.8.58888), HTTP 200 at :8080.
 
 planned: []
